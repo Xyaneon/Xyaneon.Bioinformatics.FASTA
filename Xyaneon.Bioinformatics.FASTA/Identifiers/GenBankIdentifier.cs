@@ -7,7 +7,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
     /// </summary>
     public sealed class GenBankIdentifier : Identifier
     {
-        private const string CodeValue = "lcl";
+        private const string CodeValue = "gb";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenBankIdentifier"/> class.

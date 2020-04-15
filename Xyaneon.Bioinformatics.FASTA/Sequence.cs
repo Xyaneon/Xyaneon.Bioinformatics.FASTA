@@ -16,12 +16,28 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <param name="data">The actual sequence data as a string of characters.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="descriptionIdentifiers"/> is <see langword="null"/>.
+        /// -or-
+        /// <paramref name="data"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="data"/> contains characters which are not part of
+        /// a valid amino acid or nucleic acid sequence.
         /// </exception>
         public Sequence(IEnumerable<Identifier> descriptionIdentifiers, string data)
         {
             if (descriptionIdentifiers == null)
             {
                 throw new ArgumentNullException(nameof(descriptionIdentifiers), "The collection of description identifiers cannot be null.");
+            }
+
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data), "The sequence data cannot be null.");
+            }
+
+            if (!(IsValidAminoAcidSequence(data) || IsValidNucleicAcidSequence(data)))
+            {
+                throw new ArgumentException("The supplied data is not a valid amino acid or nucleic acid sequence.", nameof(data));
             }
 
             DescriptionIdentifiers = new List<Identifier>(descriptionIdentifiers).AsReadOnly();
@@ -38,5 +54,17 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// Gets the actual sequence data as a string of characters.
         /// </summary>
         public string Data { get; }
+
+        private static bool IsValidAminoAcidSequence(string data)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        private static bool IsValidNucleicAcidSequence(string data)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }
