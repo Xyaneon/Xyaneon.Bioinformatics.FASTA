@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Xyaneon.Bioinformatics.FASTA.Data;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test
@@ -9,9 +10,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullDescriptionIdentifiersCollection()
+        public void Constructor_ShouldRejectNullHeaderItemsCollection()
         {
-            _ = new Sequence(null, "ATCG");
+            _ = new Sequence(null, new NucleicAcidSequenceData("ATCG"));
         }
 
         [TestMethod]

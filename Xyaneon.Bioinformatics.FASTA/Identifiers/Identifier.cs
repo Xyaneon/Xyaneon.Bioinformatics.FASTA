@@ -6,7 +6,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
     /// A FASTA file identifier.
     /// This class cannot be directly instantiated.
     /// </summary>
-    public abstract class Identifier
+    public abstract class Identifier : HeaderItem
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Identifier"/> class.

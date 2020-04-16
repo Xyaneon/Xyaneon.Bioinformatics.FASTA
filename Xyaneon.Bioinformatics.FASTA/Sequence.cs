@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xyaneon.Bioinformatics.FASTA.Identifiers;
+using Xyaneon.Bioinformatics.FASTA.Data;
 
 namespace Xyaneon.Bioinformatics.FASTA
 {
@@ -12,22 +12,18 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <summary>
         /// Initializes a new instance of the <see cref="Sequence"/> class.
         /// </summary>
-        /// <param name="descriptionIdentifiers">The list of identifiers from this sequence's description line.</param>
-        /// <param name="data">The actual sequence data as a string of characters.</param>
+        /// <param name="headerItems">The list of items from this sequence's header line.</param>
+        /// <param name="data">The actual sequence data.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="descriptionIdentifiers"/> is <see langword="null"/>.
+        /// <paramref name="headerItems"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="data"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="data"/> contains characters which are not part of
-        /// a valid amino acid or nucleic acid sequence.
-        /// </exception>
-        public Sequence(IEnumerable<Identifier> descriptionIdentifiers, string data)
+        public Sequence(IEnumerable<HeaderItem> headerItems, SequenceData data)
         {
-            if (descriptionIdentifiers == null)
+            if (headerItems == null)
             {
-                throw new ArgumentNullException(nameof(descriptionIdentifiers), "The collection of description identifiers cannot be null.");
+                throw new ArgumentNullException(nameof(headerItems), "The collection of header items cannot be null.");
             }
 
             if (data == null)
@@ -35,36 +31,18 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new ArgumentNullException(nameof(data), "The sequence data cannot be null.");
             }
 
-            if (!(IsValidAminoAcidSequence(data) || IsValidNucleicAcidSequence(data)))
-            {
-                throw new ArgumentException("The supplied data is not a valid amino acid or nucleic acid sequence.", nameof(data));
-            }
-
-            DescriptionIdentifiers = new List<Identifier>(descriptionIdentifiers).AsReadOnly();
+            HeaderItems = new List<HeaderItem>(headerItems).AsReadOnly();
             Data = data;
         }
 
         /// <summary>
-        /// Gets a read-only list of identifiers from this sequence's
-        /// description line.
+        /// Gets a read-only list of items from this sequence's header line.
         /// </summary>
-        public IReadOnlyList<Identifier> DescriptionIdentifiers { get; }
+        public IReadOnlyList<HeaderItem> HeaderItems { get; }
 
         /// <summary>
-        /// Gets the actual sequence data as a string of characters.
+        /// Gets the actual sequence data.
         /// </summary>
-        public string Data { get; }
-
-        private static bool IsValidAminoAcidSequence(string data)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        private static bool IsValidNucleicAcidSequence(string data)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
+        public SequenceData Data { get; }
     }
 }
