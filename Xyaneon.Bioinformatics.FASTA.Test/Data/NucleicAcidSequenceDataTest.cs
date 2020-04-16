@@ -59,7 +59,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ATCGTA";
 
             var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
-            IEnumerable<string> actualLines = nucleicAcidSequenceData.ToLines(0);
+            _ = nucleicAcidSequenceData.ToLines(0);
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ATCGTA";
 
             var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
-            IEnumerable<string> actualLines = nucleicAcidSequenceData.ToLines(-1);
+            _ = nucleicAcidSequenceData.ToLines(-1);
         }
 
         [TestMethod]
@@ -82,6 +82,38 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             IEnumerable<string> actualLines = nucleicAcidSequenceData.ToLines(4);
 
             Assert.IsTrue(actualLines.SequenceEqual(expectedLines));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ToMultilineString_RejectsLineLengthOfZero()
+        {
+            string sequence = "ATCGTA";
+
+            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            _ = nucleicAcidSequenceData.ToMultilineString(0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ToMultilineString_RejectsNegativeLineLength()
+        {
+            string sequence = "ATCGTA";
+
+            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            _ = nucleicAcidSequenceData.ToMultilineString(-1);
+        }
+
+        [TestMethod]
+        public void ToMultilineString_ProducesExpectedOutput()
+        {
+            string sequence = "ATCGTA";
+            string expectedLines = $"ATCG{Environment.NewLine}TA";
+
+            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            string actualLines = nucleicAcidSequenceData.ToMultilineString(4);
+
+            Assert.AreEqual(expectedLines, actualLines);
         }
 
         [TestMethod]

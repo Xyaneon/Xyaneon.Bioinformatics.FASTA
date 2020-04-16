@@ -67,7 +67,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ABCDEF";
 
             var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
-            IEnumerable<string> actualLines = aminoAcidSequenceData.ToLines(0);
+            _ = aminoAcidSequenceData.ToLines(0);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ABCDEF";
 
             var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
-            IEnumerable<string> actualLines = aminoAcidSequenceData.ToLines(-1);
+            _ = aminoAcidSequenceData.ToLines(-1);
         }
 
         [TestMethod]
@@ -90,6 +90,38 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             IEnumerable<string> actualLines = aminoAcidSequenceData.ToLines(4);
 
             Assert.IsTrue(actualLines.SequenceEqual(expectedLines));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ToMultilineString_RejectsLineLengthOfZero()
+        {
+            string sequence = "ABCDEF";
+
+            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            _ = aminoAcidSequenceData.ToMultilineString(0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ToMultilineString_RejectsNegativeLineLength()
+        {
+            string sequence = "ABCDEF";
+
+            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            _ = aminoAcidSequenceData.ToMultilineString(-1);
+        }
+
+        [TestMethod]
+        public void ToMultilineString_ProducesExpectedOutput()
+        {
+            string sequence = "ABCDEF";
+            string expectedLines = $"ABCD{Environment.NewLine}EF";
+
+            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            string actualLines = aminoAcidSequenceData.ToMultilineString(4);
+
+            Assert.AreEqual(expectedLines, actualLines);
         }
 
         [TestMethod]
