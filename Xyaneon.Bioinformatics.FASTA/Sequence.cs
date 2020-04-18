@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Xyaneon.Bioinformatics.FASTA.Data;
 
 namespace Xyaneon.Bioinformatics.FASTA
@@ -12,18 +11,18 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <summary>
         /// Initializes a new instance of the <see cref="Sequence"/> class.
         /// </summary>
-        /// <param name="headerItems">The list of items from this sequence's header line.</param>
+        /// <param name="header">This sequence's header.</param>
         /// <param name="data">The actual sequence data.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="headerItems"/> is <see langword="null"/>.
+        /// <paramref name="header"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="data"/> is <see langword="null"/>.
         /// </exception>
-        public Sequence(IEnumerable<HeaderItem> headerItems, SequenceData data)
+        public Sequence(Header header, SequenceData data)
         {
-            if (headerItems == null)
+            if (header == null)
             {
-                throw new ArgumentNullException(nameof(headerItems), "The collection of header items cannot be null.");
+                throw new ArgumentNullException(nameof(header), "The header cannot be null.");
             }
 
             if (data == null)
@@ -31,14 +30,14 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new ArgumentNullException(nameof(data), "The sequence data cannot be null.");
             }
 
-            HeaderItems = new List<HeaderItem>(headerItems).AsReadOnly();
+            Header = header;
             Data = data;
         }
 
         /// <summary>
-        /// Gets a read-only list of items from this sequence's header line.
+        /// Gets this sequence's header.
         /// </summary>
-        public IReadOnlyList<HeaderItem> HeaderItems { get; }
+        public Header Header { get; }
 
         /// <summary>
         /// Gets the actual sequence data.

@@ -10,7 +10,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullHeaderItemsCollection()
+        public void Constructor_ShouldRejectNullHeader()
         {
             _ = new Sequence(null, new NucleicAcidSequenceData("ATCG"));
         }
@@ -19,8 +19,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_ShouldRejectNullData()
         {
-            Identifier identifier = new LocalIdentifier("value");
-            _ = new Sequence(new Identifier[] { identifier }, null);
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            _ = new Sequence(header, null);
         }
     }
 }

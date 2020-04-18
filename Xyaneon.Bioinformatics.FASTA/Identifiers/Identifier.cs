@@ -9,6 +9,11 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
     public abstract class Identifier : HeaderItem
     {
         /// <summary>
+        /// The character used to separate parts of an identifier.
+        /// </summary>
+        public const char IdentifierPartSeparator = '|';
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Identifier"/> class.
         /// </summary>
         /// <param name="code">The code indicating which type of identifier this is.</param>
