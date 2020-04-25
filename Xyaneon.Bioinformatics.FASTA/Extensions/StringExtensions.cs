@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Xyaneon.Bioinformatics.FASTA.Extensions
@@ -29,6 +30,11 @@ namespace Xyaneon.Bioinformatics.FASTA.Extensions
 
                 yield return str.Substring(i, length);
             }
+        }
+
+        public static IEnumerable<string> SplitIntoNonBlankLines(this string str)
+        {
+            return str.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Where(s => !string.IsNullOrWhiteSpace(s));
         }
     }
 }

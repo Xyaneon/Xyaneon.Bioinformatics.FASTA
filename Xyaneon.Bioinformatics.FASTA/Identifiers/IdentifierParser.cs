@@ -41,25 +41,46 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
 
             try
             {
-                switch (identifierParts[0])
-                {
-                    case "bbm":
-                        return new BackboneMolTypeIdentifier(int.Parse(identifierParts[1]));
-                    case "bbs":
-                        return new BackboneSeqIdIdentifier(int.Parse(identifierParts[1]));
-                    case "gb":
-                        return new GenBankIdentifier(identifierParts[1], identifierParts[2]);
-                    case "gim":
-                        return new ImportIdIdentifier(int.Parse(identifierParts[1]));
-                    case "lcl":
-                        return new LocalIdentifier(identifierParts[1]);
-                    default:
-                        throw new NotSupportedException($"\"{identifierParts[0]}\" is not a recognized identifier code.");
-                }
+                return ParseIdentifierParts(identifierParts);
             }
             catch (Exception ex)
             {
                 throw new FormatException("The supplied string could not be parsed as a valid FASTA identifier.", ex);
+            }
+        }
+
+        private static ArgumentException CreateIdentifierPartsCountException(string code, int expected, int actual)
+        {
+            string message = $"The number of identifier parts supplied does not match what is needed for the provided identifier code \"{code}\" (expected {expected}, got {actual}).";
+            return new ArgumentException(message);
+        }
+
+        private static Identifier ParseIdentifierParts(IList<string> identifierParts)
+        {
+            if (identifierParts.Count < 1)
+            {
+                throw new ArgumentException("There must be at least one identifier part supplied for parsing (the identifier code).");
+            }
+
+            switch (identifierParts[0])
+            {
+                case "bbm":
+                    ThrowIfWrongNumberOfPartsForIdentifier("bbm", 2, identifierParts);
+                    return new BackboneMolTypeIdentifier(int.Parse(identifierParts[1]));
+                case "bbs":
+                    ThrowIfWrongNumberOfPartsForIdentifier("bbs", 2, identifierParts);
+                    return new BackboneSeqIdIdentifier(int.Parse(identifierParts[1]));
+                case "gb":
+                    ThrowIfWrongNumberOfPartsForIdentifier("gb", 3, identifierParts);
+                    return new GenBankIdentifier(identifierParts[1], identifierParts[2]);
+                case "gim":
+                    ThrowIfWrongNumberOfPartsForIdentifier("gim", 2, identifierParts);
+                    return new ImportIdIdentifier(int.Parse(identifierParts[1]));
+                case "lcl":
+                    ThrowIfWrongNumberOfPartsForIdentifier("lcl", 2, identifierParts);
+                    return new LocalIdentifier(identifierParts[1]);
+                default:
+                    throw new NotSupportedException($"\"{identifierParts[0]}\" is not a recognized identifier code.");
             }
         }
 
@@ -68,6 +89,14 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
             return identifierString.Split(Separators, StringSplitOptions.None)
                 .Select(str => str.Trim())
                 .ToList();
+        }
+
+        private static void ThrowIfWrongNumberOfPartsForIdentifier(string code, int expectedCount, IList<string> identifierParts)
+        {
+            if (identifierParts.Count != expectedCount)
+            {
+                throw CreateIdentifierPartsCountException(code, expectedCount, identifierParts.Count);
+            }
         }
     }
 }

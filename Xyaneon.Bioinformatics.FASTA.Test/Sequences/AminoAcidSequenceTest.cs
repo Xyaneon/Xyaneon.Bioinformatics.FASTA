@@ -2,61 +2,61 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xyaneon.Bioinformatics.FASTA.Data;
+using Xyaneon.Bioinformatics.FASTA.Sequences;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test.Data
 {
     [TestClass]
-    public class AminoAcidSequenceDataTest
+    public class AminoAcidSequenceTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullString()
+        public void Parse_ShouldRejectNullString()
         {
-            _ = new AminoAcidSequenceData(null);
+            _ = AminoAcidSequence.Parse(null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_ShouldRejectInvalidCharacterAtStart()
+        [ExpectedException(typeof(FormatException))]
+        public void Parse_ShouldRejectInvalidCharacterAtStart()
         {
-            _ = new AminoAcidSequenceData("2ABC");
+            _ = AminoAcidSequence.Parse("2ABC");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_ShouldRejectInvalidCharacterAtEnd()
+        [ExpectedException(typeof(FormatException))]
+        public void Parse_ShouldRejectInvalidCharacterAtEnd()
         {
-            _ = new AminoAcidSequenceData("ABC2");
+            _ = AminoAcidSequence.Parse("ABC2");
         }
 
         [TestMethod]
-        public void Constructor_ShouldConvertLowercaseSequenceToUppercase()
+        public void Parse_ShouldConvertLowercaseSequenceToUppercase()
         {
-            var aminoAcidSequenceData = new AminoAcidSequenceData("abc");
+            var aminoAcidSequenceData = AminoAcidSequence.Parse("abc");
             Assert.AreEqual("ABC", aminoAcidSequenceData.Characters);
         }
 
         [TestMethod]
-        public void Constructor_ShouldConvertMultilineSequenceToSingleLine()
+        public void Parse_ShouldConvertMultilineSequenceToSingleLine()
         {
-            var aminoAcidSequenceData = new AminoAcidSequenceData("ABC\nDEF");
+            var aminoAcidSequenceData = AminoAcidSequence.Parse("ABC\nDEF");
             Assert.AreEqual("ABCDEF", aminoAcidSequenceData.Characters);
         }
 
         [TestMethod]
-        public void Constructor_ShouldAcceptGaps()
+        public void Parse_ShouldAcceptGaps()
         {
             string expectedSequence = "ABC-";
-            var aminoAcidSequenceData = new AminoAcidSequenceData(expectedSequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(expectedSequence);
             Assert.AreEqual(expectedSequence, aminoAcidSequenceData.Characters);
         }
 
         [TestMethod]
-        public void Constructor_ShouldAcceptTranslationStop()
+        public void Parse_ShouldAcceptTranslationStop()
         {
             string expectedSequence = "ABC*";
-            var aminoAcidSequenceData = new AminoAcidSequenceData(expectedSequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(expectedSequence);
             Assert.AreEqual(expectedSequence, aminoAcidSequenceData.Characters);
         }
 
@@ -66,7 +66,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ABCDEF";
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             _ = aminoAcidSequenceData.ToLines(0);
         }
 
@@ -76,7 +76,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ABCDEF";
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             _ = aminoAcidSequenceData.ToLines(-1);
         }
 
@@ -86,7 +86,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ABCDEF";
             var expectedLines = new string[] { "ABCD", "EF" };
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             IEnumerable<string> actualLines = aminoAcidSequenceData.ToLines(4);
 
             Assert.IsTrue(actualLines.SequenceEqual(expectedLines));
@@ -98,7 +98,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ABCDEF";
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             _ = aminoAcidSequenceData.ToMultilineString(0);
         }
 
@@ -108,7 +108,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ABCDEF";
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             _ = aminoAcidSequenceData.ToMultilineString(-1);
         }
 
@@ -118,7 +118,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ABCDEF";
             string expectedLines = $"ABCD{Environment.NewLine}EF";
 
-            var aminoAcidSequenceData = new AminoAcidSequenceData(sequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(sequence);
             string actualLines = aminoAcidSequenceData.ToMultilineString(4);
 
             Assert.AreEqual(expectedLines, actualLines);
@@ -128,7 +128,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         public void ToString_ProducesExpectedOutput()
         {
             string expectedSequence = "ABC-";
-            var aminoAcidSequenceData = new AminoAcidSequenceData(expectedSequence);
+            var aminoAcidSequenceData = AminoAcidSequence.Parse(expectedSequence);
             Assert.AreEqual(expectedSequence, aminoAcidSequenceData.ToString());
         }
     }

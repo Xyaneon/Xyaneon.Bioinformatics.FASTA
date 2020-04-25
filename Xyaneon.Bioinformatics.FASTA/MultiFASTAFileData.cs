@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xyaneon.Bioinformatics.FASTA.Data;
+using Xyaneon.Bioinformatics.FASTA.Sequences;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
 namespace Xyaneon.Bioinformatics.FASTA
@@ -9,46 +9,46 @@ namespace Xyaneon.Bioinformatics.FASTA
     /// <summary>
     /// Contains all of the data stored in a single FASTA file.
     /// </summary>
-    public sealed class FileData
+    public sealed class MultiFASTAFileData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileData"/> class.
+        /// Initializes a new instance of the <see cref="MultiFASTAFileData"/> class.
         /// </summary>
         /// <param name="sequence">The sequence stored in the file.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sequence"/> is <see langword="null"/>.
         /// </exception>
-        public FileData(Sequence sequence)
+        public MultiFASTAFileData(SingleFASTAFileData sequence)
         {
             if (sequence == null)
             {
                 throw new ArgumentNullException(nameof(sequence), "The sequence cannot be null.");
             }
 
-            Sequences = ListUtility.CreateSingleElementList(sequence).AsReadOnly();
+            SingleFASTASequences = ListUtility.CreateSingleElementList(sequence).AsReadOnly();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileData"/> class.
+        /// Initializes a new instance of the <see cref="MultiFASTAFileData"/> class.
         /// </summary>
         /// <param name="sequences">The collection of all sequences stored in the file.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sequences"/> is <see langword="null"/>.
         /// </exception>
-        public FileData(IEnumerable<Sequence> sequences)
+        public MultiFASTAFileData(IEnumerable<SingleFASTAFileData> sequences)
         {
             if (sequences == null)
             {
                 throw new ArgumentNullException(nameof(sequences), "The collection of sequences cannot be null.");
             }
 
-            Sequences = new List<Sequence>(sequences).AsReadOnly();
+            SingleFASTASequences = new List<SingleFASTAFileData>(sequences).AsReadOnly();
         }
 
         /// <summary>
-        /// Gets a read-only list of all sequences stored in this file.
+        /// Gets a read-only list of all individual FASTA sequences stored in this file.
         /// </summary>
-        public IReadOnlyList<Sequence> Sequences { get; }
+        public IReadOnlyList<SingleFASTAFileData> SingleFASTASequences { get; }
 
         /// <summary>
         /// Returns a value indicating whether this file only contains amino
@@ -58,10 +58,10 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <see langword="true"/> if all sequences in this file are amino acid
         /// sequences; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <seealso cref="ContainsOnlyNucleicAcidSequenes"/>
+        /// <seealso cref="ContainsOnlyNucleicAcidSequences"/>
         public bool ContainsOnlyAminoAcidSequences()
         {
-            return AllSequencesAreOfType(typeof(AminoAcidSequenceData));
+            return AllSequencesAreOfType(typeof(AminoAcidSequence));
         }
 
         /// <summary>
@@ -75,12 +75,12 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <seealso cref="ContainsOnlyAminoAcidSequences"/>
         public bool ContainsOnlyNucleicAcidSequences()
         {
-            return AllSequencesAreOfType(typeof(NucleicAcidSequenceData));
+            return AllSequencesAreOfType(typeof(NucleicAcidSequence));
         }
 
         private bool AllSequencesAreOfType(Type type)
         {
-            return Sequences.All(sequence => sequence.Data.GetType() == type);
+            return SingleFASTASequences.All(sequence => sequence.Data.GetType() == type);
         }
     }
 }

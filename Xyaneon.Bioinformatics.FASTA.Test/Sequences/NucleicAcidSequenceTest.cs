@@ -2,53 +2,53 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xyaneon.Bioinformatics.FASTA.Data;
+using Xyaneon.Bioinformatics.FASTA.Sequences;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test.Data
 {
     [TestClass]
-    public class NucleicAcidSequenceDataTest
+    public class NucleicAcidSequenceTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullString()
+        public void Parse_ShouldRejectNullString()
         {
-            _ = new NucleicAcidSequenceData(null);
+            _ = NucleicAcidSequence.Parse(null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_ShouldRejectInvalidCharacterAtStart()
+        [ExpectedException(typeof(FormatException))]
+        public void Parse_ShouldRejectInvalidCharacterAtStart()
         {
-            _ = new NucleicAcidSequenceData("2ATCG");
+            _ = NucleicAcidSequence.Parse("2ATCG");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Constructor_ShouldRejectInvalidCharacterAtEnd()
+        [ExpectedException(typeof(FormatException))]
+        public void Parse_ShouldRejectInvalidCharacterAtEnd()
         {
-            _ = new NucleicAcidSequenceData("ATCG2");
+            _ = NucleicAcidSequence.Parse("ATCG2");
         }
 
         [TestMethod]
-        public void Constructor_ShouldConvertLowercaseSequenceToUppercase()
+        public void Parse_ShouldConvertLowercaseSequenceToUppercase()
         {
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData("atcg");
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse("atcg");
             Assert.AreEqual("ATCG", nucleicAcidSequenceData.Characters);
         }
 
         [TestMethod]
-        public void Constructor_ShouldConvertMultilineSequenceToSingleLine()
+        public void Parse_ShouldConvertMultilineSequenceToSingleLine()
         {
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData("ATG\nCAT");
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse("ATG\nCAT");
             Assert.AreEqual("ATGCAT", nucleicAcidSequenceData.Characters);
         }
 
         [TestMethod]
-        public void Constructor_ShouldAcceptGaps()
+        public void Parse_ShouldAcceptGaps()
         {
             string expectedSequence = "ATC-";
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(expectedSequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(expectedSequence);
             Assert.AreEqual(expectedSequence, nucleicAcidSequenceData.Characters);
         }
 
@@ -58,7 +58,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ATCGTA";
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             _ = nucleicAcidSequenceData.ToLines(0);
         }
 
@@ -68,7 +68,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ATCGTA";
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             _ = nucleicAcidSequenceData.ToLines(-1);
         }
 
@@ -78,7 +78,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ATCGTA";
             var expectedLines = new string[] { "ATCG", "TA" };
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             IEnumerable<string> actualLines = nucleicAcidSequenceData.ToLines(4);
 
             Assert.IsTrue(actualLines.SequenceEqual(expectedLines));
@@ -90,7 +90,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ATCGTA";
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             _ = nucleicAcidSequenceData.ToMultilineString(0);
         }
 
@@ -100,7 +100,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         {
             string sequence = "ATCGTA";
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             _ = nucleicAcidSequenceData.ToMultilineString(-1);
         }
 
@@ -110,7 +110,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
             string sequence = "ATCGTA";
             string expectedLines = $"ATCG{Environment.NewLine}TA";
 
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(sequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(sequence);
             string actualLines = nucleicAcidSequenceData.ToMultilineString(4);
 
             Assert.AreEqual(expectedLines, actualLines);
@@ -120,7 +120,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         public void ToString_ProducesExpectedOutput()
         {
             string expectedSequence = "ATC-";
-            var nucleicAcidSequenceData = new NucleicAcidSequenceData(expectedSequence);
+            var nucleicAcidSequenceData = NucleicAcidSequence.Parse(expectedSequence);
             Assert.AreEqual(expectedSequence, nucleicAcidSequenceData.ToString());
         }
     }
