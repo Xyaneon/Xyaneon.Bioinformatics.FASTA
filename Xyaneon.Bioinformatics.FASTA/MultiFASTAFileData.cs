@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xyaneon.Bioinformatics.FASTA.Extensions;
 using Xyaneon.Bioinformatics.FASTA.Sequences;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
@@ -78,9 +79,116 @@ namespace Xyaneon.Bioinformatics.FASTA
             return AllSequencesAreOfType(typeof(NucleicAcidSequence));
         }
 
+        /// <summary>
+        /// Parses the provided string as a new <see cref="MultiFASTAFileData"/>
+        /// instance.
+        /// </summary>
+        /// <param name="s">The string to parse.</param>
+        /// <returns>A new <see cref="MultiFASTAFileData"/> instance parsed from <paramref name="s"/>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="s"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// <paramref name="s"/> is not of the correct format.
+        /// </exception>
+        public static MultiFASTAFileData Parse(string s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s), "The string to parse cannot be null.");
+            }
+
+            return ParseBase(s.SplitIntoNonBlankLines());
+        }
+
+        /// <summary>
+        /// Parses the provided collection of strings as a new
+        /// <see cref="MultiFASTAFileData"/> instance.
+        /// </summary>
+        /// <param name="lines">The collection of lines to parse.</param>
+        /// <returns>A new <see cref="MultiFASTAFileData"/> instance parsed from <paramref name="lines"/>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="lines"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// <paramref name="lines"/> is not of the correct format.
+        /// </exception>
+        public static MultiFASTAFileData Parse(IEnumerable<string> lines)
+        {
+            if (lines == null)
+            {
+                throw new ArgumentNullException(nameof(lines), "The collection of lines to parse cannot be null.");
+            }
+
+            return ParseBase(lines);
+        }
+
         private bool AllSequencesAreOfType(Type type)
         {
             return SingleFASTASequences.All(sequence => sequence.Data.GetType() == type);
+        }
+
+        private static MultiFASTAFileData ParseBase(IEnumerable<string> lines)
+        {
+            try
+            {
+                IEnumerable<string> nonBlankLines = lines.Where(line => !string.IsNullOrWhiteSpace(line));
+                IEnumerable<SingleFASTAFileData> sequences = ParseSequences(nonBlankLines.ToList());
+
+                return new MultiFASTAFileData(sequences);
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException("The collection of sequence lines are not in the correct format.", ex);
+            }
+        }
+
+        private static IEnumerable<SingleFASTAFileData> ParseSequences(IEnumerable<string> lines)
+        {
+            IEnumerable<IEnumerable<string>> lineGroups = SplitByHeaderLines(lines);
+            int sequenceNumber = 1;
+
+            foreach (IEnumerable<string> lineGroup in lineGroups)
+            {
+                SingleFASTAFileData singleFASTAFileData;
+
+                try
+                {
+                    singleFASTAFileData = SingleFASTAFileData.Parse(lineGroup);
+                }
+                catch (FormatException ex)
+                {
+                    throw new FormatException($"Sequence {sequenceNumber:N0} is in an incorrect format.", ex);
+                }
+
+                sequenceNumber++;
+                yield return singleFASTAFileData;
+            }
+        }
+
+        private static IEnumerable<IEnumerable<string>> SplitByHeaderLines(IEnumerable<string> lines)
+        {
+            List<string> lineGroup = new List<string>();
+
+            foreach (string line in lines)
+            {
+                if (line.StartsWith($"{Header.HeaderStartCharacter}") && lineGroup.Count > 0)
+                {
+                    IEnumerable<string> lineGroupToReturn = new List<string>(lineGroup);
+                    lineGroup = new List<string>() { line };
+
+                    yield return lineGroupToReturn;
+                }
+                else
+                {
+                    lineGroup.Add(line);
+                }
+            }
+
+            if (lineGroup.Count > 0)
+            {
+                yield return lineGroup;
+            }
         }
     }
 }

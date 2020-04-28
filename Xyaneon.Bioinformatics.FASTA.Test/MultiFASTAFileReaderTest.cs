@@ -1,91 +1,28 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.Test.Extensions;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test
 {
     [TestClass]
-    public class MultiFASTAFileDataTest
+    public class MultiFASTAFileReaderTest
     {
-        private const string Description1Text = "Description 1";
-        private const string Description2Text = "Description 2";
-
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullSequence()
+        public void ReadFromStream_ShouldRejectNullStream()
         {
-            _ = new MultiFASTAFileData((SingleFASTAFileData)null);
+            _ = MultiFASTAFileReader.ReadFromStream(null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldRejectNullSequencesCollection()
+        public void ReadFromStream_ShouldProduceExpectedOutputForOneSequence()
         {
-            _ = new MultiFASTAFileData((IEnumerable<SingleFASTAFileData>)null);
-        }
-
-        [TestMethod]
-        public void ContainsOnlyAminoAcidSequences_ShouldReturnTrueIfAllSequencesAreForAminoAcids()
-        { 
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("EFGH"))
-            };
-            var fileData = new MultiFASTAFileData(sequences);
-
-            Assert.IsTrue(fileData.ContainsOnlyAminoAcidSequences());
-        }
-
-        [TestMethod]
-        public void ContainsOnlyAminoAcidSequences_ShouldReturnFalseIfSomeSequencesAreNotForAminoAcids()
-        {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("ATGC"))
-            };
-            var fileData = new MultiFASTAFileData(sequences);
-
-            Assert.IsFalse(fileData.ContainsOnlyAminoAcidSequences());
-        }
-
-        [TestMethod]
-        public void ContainsOnlyNucleicAcidSequences_ShouldReturnTrueIfAllSequencesAreForNucleicAcids()
-        {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("GCTA"))
-            };
-            var fileData = new MultiFASTAFileData(sequences);
-
-            Assert.IsTrue(fileData.ContainsOnlyNucleicAcidSequences());
-        }
-
-        [TestMethod]
-        public void ContainsOnlyNucleicAcidSequences_ShouldReturnFalseIfSomeSequencesAreNotForNucleicAcids()
-        {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("ABCD"))
-            };
-            var fileData = new MultiFASTAFileData(sequences);
-
-            Assert.IsFalse(fileData.ContainsOnlyNucleicAcidSequences());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Parse_ShouldRejectNullString()
-        {
-            _ = MultiFASTAFileData.Parse((string)null);
-        }
-
-        [TestMethod]
-        public void Parse_ShouldProduceExpectedOutputForOneSequence()
-        {
-            string inputString = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA");
-            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileData.Parse(inputString);
+            Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA").ToStream();
+            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileReader.ReadFromStream(stream);
 
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
@@ -106,10 +43,10 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
-        public void Parse_ShouldProduceExpectedOutputForTwoSequences()
+        public void ReadFromStream_ShouldProduceExpectedOutputForTwoSequences()
         {
-            string inputString = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC");
-            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileData.Parse(inputString);
+            Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC").ToStream();
+            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileReader.ReadFromStream(stream);
 
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
@@ -149,16 +86,16 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Parse_ShouldRejectNullLinesCollection()
+        public async Task ReadFromStreamAsync_ShouldRejectNullStream()
         {
-            _ = MultiFASTAFileData.Parse((IEnumerable<string>)null);
+            _ = await MultiFASTAFileReader.ReadFromStreamAsync(null);
         }
 
         [TestMethod]
-        public void Parse_ShouldProduceExpectedOutputForLinesForOneSequence()
+        public async Task ReadFromStreamAsync_ShouldProduceExpectedOutputForOneSequence()
         {
-            IEnumerable<string> lines = new List<string>() { ">lcl|123", "ATCG", "AAAA" };
-            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileData.Parse(lines);
+            Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA").ToStream();
+            MultiFASTAFileData multiFASTAFileData = await MultiFASTAFileReader.ReadFromStreamAsync(stream);
 
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
@@ -179,10 +116,10 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
-        public void Parse_ShouldProduceExpectedOutputForLinesForTwoSequences()
+        public async Task ReadFromStreamAsync_ShouldProduceExpectedOutputForTwoSequences()
         {
-            IEnumerable<string> lines = new List<string>() { ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC" };
-            MultiFASTAFileData multiFASTAFileData = MultiFASTAFileData.Parse(lines);
+            Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC").ToStream();
+            MultiFASTAFileData multiFASTAFileData = await MultiFASTAFileReader.ReadFromStreamAsync(stream);
 
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
