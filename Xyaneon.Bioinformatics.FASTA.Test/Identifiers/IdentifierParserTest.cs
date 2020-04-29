@@ -64,6 +64,18 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
         }
 
         [TestMethod]
+        public void Parse_ShouldParseEMBLIdentifier()
+        {
+            var expected = new EMBLIdentifier("M73307", "AGMA13GT");
+            var actual = IdentifierParser.Parse("emb|M73307|AGMA13GT") as EMBLIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Locus, actual.Locus);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseImportIdIdentifier()
         {
             var expected = new ImportIdIdentifier(123);
@@ -83,6 +95,18 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected.Code, actual.Code);
             Assert.AreEqual(expected.Value, actual.Value);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParsePIRIdentifier()
+        {
+            var expected = new PIRIdentifier("M73307", "AGMA13GT");
+            var actual = IdentifierParser.Parse("pir|M73307|AGMA13GT") as PIRIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
         }
     }
 }

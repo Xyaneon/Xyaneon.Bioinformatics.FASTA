@@ -5,13 +5,11 @@
     /// </summary>
     public sealed class ImportIdIdentifier : Identifier
     {
-        private const string CodeValue = "gim";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportIdIdentifier"/> class.
         /// </summary>
         /// <param name="value">The identifier value.</param>
-        public ImportIdIdentifier(int value) : base(CodeValue)
+        public ImportIdIdentifier(int value) : base(Constants.Codes.ImportId)
         {
             Value = value;
         }

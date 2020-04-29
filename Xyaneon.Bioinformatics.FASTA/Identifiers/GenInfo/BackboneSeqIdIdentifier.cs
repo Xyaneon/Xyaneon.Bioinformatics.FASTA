@@ -5,13 +5,11 @@
     /// </summary>
     public sealed class BackboneSeqIdIdentifier : Identifier
     {
-        private const string CodeValue = "bbs";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BackboneSeqIdIdentifier"/> class.
         /// </summary>
         /// <param name="value">The identifier value.</param>
-        public BackboneSeqIdIdentifier(int value) : base(CodeValue)
+        public BackboneSeqIdIdentifier(int value) : base(Constants.Codes.BackboneSeqID)
         {
             Value = value;
         }

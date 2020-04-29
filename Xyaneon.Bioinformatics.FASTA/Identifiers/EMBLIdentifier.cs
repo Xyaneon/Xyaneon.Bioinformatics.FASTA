@@ -3,12 +3,12 @@
 namespace Xyaneon.Bioinformatics.FASTA.Identifiers
 {
     /// <summary>
-    /// A GenBank FASTA identifier.
+    /// An EMBL FASTA identifier.
     /// </summary>
-    public sealed class GenBankIdentifier : Identifier
+    public sealed class EMBLIdentifier : Identifier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenBankIdentifier"/> class.
+        /// Initializes a new instance of the <see cref="EMBLIdentifier"/> class.
         /// </summary>
         /// <param name="accession">The accession number.</param>
         /// <param name="locus">The locus number.</param>
@@ -22,7 +22,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
         /// -or-
         /// <paramref name="locus"/> is empty or all whitespace.
         /// </exception>
-        public GenBankIdentifier(string accession, string locus) : base(Constants.Codes.GenBank)
+        public EMBLIdentifier(string accession, string locus) : base(Constants.Codes.EMBL)
         {
             if (accession == null)
             {

@@ -5,13 +5,11 @@
     /// </summary>
     public sealed class BackboneMolTypeIdentifier : Identifier
     {
-        private const string CodeValue = "bbm";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BackboneMolTypeIdentifier"/> class.
         /// </summary>
         /// <param name="value">The identifier value.</param>
-        public BackboneMolTypeIdentifier(int value) : base(CodeValue)
+        public BackboneMolTypeIdentifier(int value) : base(Constants.Codes.BackboneMolType)
         {
             Value = value;
         }

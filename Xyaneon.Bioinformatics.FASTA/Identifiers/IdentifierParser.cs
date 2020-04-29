@@ -64,21 +64,27 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
 
             switch (identifierParts[0])
             {
-                case "bbm":
-                    ThrowIfWrongNumberOfPartsForIdentifier("bbm", 2, identifierParts);
+                case Constants.Codes.BackboneMolType:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.BackboneMolType, 2, identifierParts);
                     return new BackboneMolTypeIdentifier(int.Parse(identifierParts[1]));
-                case "bbs":
-                    ThrowIfWrongNumberOfPartsForIdentifier("bbs", 2, identifierParts);
+                case Constants.Codes.BackboneSeqID:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.BackboneSeqID, 2, identifierParts);
                     return new BackboneSeqIdIdentifier(int.Parse(identifierParts[1]));
-                case "gb":
-                    ThrowIfWrongNumberOfPartsForIdentifier("gb", 3, identifierParts);
+                case Constants.Codes.GenBank:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.GenBank, 3, identifierParts);
                     return new GenBankIdentifier(identifierParts[1], identifierParts[2]);
-                case "gim":
-                    ThrowIfWrongNumberOfPartsForIdentifier("gim", 2, identifierParts);
+                case Constants.Codes.EMBL:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.EMBL, 3, identifierParts);
+                    return new EMBLIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.ImportId:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.ImportId, 2, identifierParts);
                     return new ImportIdIdentifier(int.Parse(identifierParts[1]));
-                case "lcl":
-                    ThrowIfWrongNumberOfPartsForIdentifier("lcl", 2, identifierParts);
+                case Constants.Codes.Local:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.Local, 2, identifierParts);
                     return new LocalIdentifier(identifierParts[1]);
+                case Constants.Codes.PIR:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PIR, 3, identifierParts);
+                    return new PIRIdentifier(identifierParts[1], identifierParts[2]);
                 default:
                     throw new NotSupportedException($"\"{identifierParts[0]}\" is not a recognized identifier code.");
             }

@@ -7,8 +7,6 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
     /// </summary>
     public sealed class LocalIdentifier : Identifier
     {
-        private const string CodeValue = "lcl";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalIdentifier"/> class.
         /// </summary>
@@ -19,7 +17,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
         /// <exception cref="ArgumentException">
         /// <paramref name="value"/> is empty or all whitespace.
         /// </exception>
-        public LocalIdentifier(string value) : base(CodeValue)
+        public LocalIdentifier(string value) : base(Constants.Codes.Local)
         {
             if (value == null)
             {

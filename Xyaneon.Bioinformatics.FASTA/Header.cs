@@ -94,12 +94,7 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new FormatException("The header line to parse does not start with the required start character.");
             }
 
-            IList<string> headerParts = headerLine.TrimStart(HeaderStartCharacter)
-                .Trim()
-                .Split(ItemsSeparator[0])
-                .Select(str => str.Trim())
-                .ToList();
-
+            IList<string> headerParts = ExtractHeaderParts(headerLine);
             IEnumerable<HeaderItem> headerItems = ParseHeaderItems(headerParts);
 
             return new Header(headerItems);
@@ -114,6 +109,15 @@ namespace Xyaneon.Bioinformatics.FASTA
             return $"{HeaderStartCharacter}{string.Join(ItemsSeparator, Items)}";
         }
 
+        private static IList<string> ExtractHeaderParts(string headerLine)
+        {
+            return headerLine.TrimStart(HeaderStartCharacter)
+                .Trim()
+                .Split(ItemsSeparator[0])
+                .Select(str => str.Trim())
+                .ToList();
+        }
+
         private static IEnumerable<HeaderItem> ParseHeaderItems(IList<string> headerParts)
         {
             int index = 0;
@@ -122,22 +126,30 @@ namespace Xyaneon.Bioinformatics.FASTA
             {
                 switch (headerParts[index])
                 {
-                    case "bbm":
+                    case Constants.Codes.BackboneMolType:
                         yield return new BackboneMolTypeIdentifier(int.Parse(headerParts[++index]));
                         break;
-                    case "bbs":
+                    case Constants.Codes.BackboneSeqID:
                         yield return new BackboneSeqIdIdentifier(int.Parse(headerParts[++index]));
                         break;
-                    case "gim":
+                    case Constants.Codes.EMBL:
+                        // TODO
+                        throw new NotImplementedException();
+                        break;
+                    case Constants.Codes.ImportId:
                         yield return new ImportIdIdentifier(int.Parse(headerParts[++index]));
                         break;
-                    case "gb":
+                    case Constants.Codes.GenBank:
                         string accession = headerParts[++index];
                         string locus = headerParts[++index];
                         yield return new GenBankIdentifier(accession, locus);
                         break;
-                    case "lcl":
+                    case Constants.Codes.Local:
                         yield return new LocalIdentifier(headerParts[++index]);
+                        break;
+                    case Constants.Codes.PIR:
+                        // TODO
+                        throw new NotImplementedException();
                         break;
                     default:
                         yield return new Description(headerParts[index]);
