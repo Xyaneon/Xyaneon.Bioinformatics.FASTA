@@ -108,5 +108,17 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
             Assert.AreEqual(expected.Accession, actual.Accession);
             Assert.AreEqual(expected.Name, actual.Name);
         }
+
+        [TestMethod]
+        public void Parse_ShouldParseSWISSPROTIdentifier()
+        {
+            var expected = new SWISSPROTIdentifier("M73307", "AGMA13GT");
+            var actual = IdentifierParser.Parse("sp|M73307|AGMA13GT") as SWISSPROTIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
     }
 }

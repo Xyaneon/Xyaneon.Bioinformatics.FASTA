@@ -86,6 +86,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithEMBLIdentifier()
+        {
+            Header header = Header.Parse(">emb|ACCESSION|LOCUS");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(EMBLIdentifier));
+            var identifier = (EMBLIdentifier)header.Items[0];
+            Assert.AreEqual("emb", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("LOCUS", identifier.Locus);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithGenBankIdentifier()
         {
             Header header = Header.Parse(">gb|123|456");
@@ -123,6 +137,34 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             var identifier = (LocalIdentifier)header.Items[0];
             Assert.AreEqual("lcl", identifier.Code);
             Assert.AreEqual("123", identifier.Value);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithPIRIdentifier()
+        {
+            Header header = Header.Parse(">pir|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(PIRIdentifier));
+            var identifier = (PIRIdentifier)header.Items[0];
+            Assert.AreEqual("pir", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithSWISSPROTIdentifier()
+        {
+            Header header = Header.Parse(">sp|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(SWISSPROTIdentifier));
+            var identifier = (SWISSPROTIdentifier)header.Items[0];
+            Assert.AreEqual("sp", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
         }
 
         [TestMethod]

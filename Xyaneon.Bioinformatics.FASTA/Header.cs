@@ -133,23 +133,38 @@ namespace Xyaneon.Bioinformatics.FASTA
                         yield return new BackboneSeqIdIdentifier(int.Parse(headerParts[++index]));
                         break;
                     case Constants.Codes.EMBL:
-                        // TODO
-                        throw new NotImplementedException();
+                        {
+                            string accession = headerParts[++index];
+                            string locus = headerParts[++index];
+                            yield return new EMBLIdentifier(accession, locus);
+                        }
                         break;
                     case Constants.Codes.ImportId:
                         yield return new ImportIdIdentifier(int.Parse(headerParts[++index]));
                         break;
                     case Constants.Codes.GenBank:
-                        string accession = headerParts[++index];
-                        string locus = headerParts[++index];
-                        yield return new GenBankIdentifier(accession, locus);
+                        {
+                            string accession = headerParts[++index];
+                            string locus = headerParts[++index];
+                            yield return new GenBankIdentifier(accession, locus);
+                        }
                         break;
                     case Constants.Codes.Local:
                         yield return new LocalIdentifier(headerParts[++index]);
                         break;
                     case Constants.Codes.PIR:
-                        // TODO
-                        throw new NotImplementedException();
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new PIRIdentifier(accession, name);
+                        }
+                        break;
+                    case Constants.Codes.SWISSPROT:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new SWISSPROTIdentifier(accession, name);
+                        }
                         break;
                     default:
                         yield return new Description(headerParts[index]);
