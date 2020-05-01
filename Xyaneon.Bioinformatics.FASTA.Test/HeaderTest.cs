@@ -127,6 +127,19 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithIntegratedDatabaseIdentifier()
+        {
+            Header header = Header.Parse(">gi|123");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(IntegratedDatabaseIdentifier));
+            var identifier = (IntegratedDatabaseIdentifier)header.Items[0];
+            Assert.AreEqual("gi", identifier.Code);
+            Assert.AreEqual(123, identifier.Value);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithLocalIdentifier()
         {
             Header header = Header.Parse(">lcl|123");
@@ -140,6 +153,21 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithPatentIdentifier()
+        {
+            Header header = Header.Parse(">pat|COUNTRY|PATENT|SEQUENCENUMBER");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(PatentIdentifier));
+            var identifier = (PatentIdentifier)header.Items[0];
+            Assert.AreEqual("pat", identifier.Code);
+            Assert.AreEqual("COUNTRY", identifier.Country);
+            Assert.AreEqual("PATENT", identifier.Patent);
+            Assert.AreEqual("SEQUENCENUMBER", identifier.SequenceNumber);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithPIRIdentifier()
         {
             Header header = Header.Parse(">pir|ACCESSION|NAME");
@@ -149,6 +177,35 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.IsInstanceOfType(header.Items[0], typeof(PIRIdentifier));
             var identifier = (PIRIdentifier)header.Items[0];
             Assert.AreEqual("pir", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithPreGrantPatentIdentifier()
+        {
+            Header header = Header.Parse(">pgp|COUNTRY|APPLICATIONNUMBER|SEQUENCENUMBER");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(PreGrantPatentIdentifier));
+            var identifier = (PreGrantPatentIdentifier)header.Items[0];
+            Assert.AreEqual("pgp", identifier.Code);
+            Assert.AreEqual("COUNTRY", identifier.Country);
+            Assert.AreEqual("APPLICATIONNUMBER", identifier.ApplicationNumber);
+            Assert.AreEqual("SEQUENCENUMBER", identifier.SequenceNumber);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithRefSeqdentifier()
+        {
+            Header header = Header.Parse(">ref|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(RefSeqIdentifier));
+            var identifier = (RefSeqIdentifier)header.Items[0];
+            Assert.AreEqual("ref", identifier.Code);
             Assert.AreEqual("ACCESSION", identifier.Accession);
             Assert.AreEqual("NAME", identifier.Name);
         }

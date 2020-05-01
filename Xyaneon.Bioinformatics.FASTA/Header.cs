@@ -149,14 +149,40 @@ namespace Xyaneon.Bioinformatics.FASTA
                             yield return new GenBankIdentifier(accession, locus);
                         }
                         break;
+                    case Constants.Codes.GenInfoIntegratedDatabase:
+                        yield return new IntegratedDatabaseIdentifier(int.Parse(headerParts[++index]));
+                        break;
                     case Constants.Codes.Local:
                         yield return new LocalIdentifier(headerParts[++index]);
+                        break;
+                    case Constants.Codes.Patent:
+                        {
+                            string country = headerParts[++index];
+                            string patent = headerParts[++index];
+                            string sequenceNumber = headerParts[++index];
+                            yield return new PatentIdentifier(country, patent, sequenceNumber);
+                        }
                         break;
                     case Constants.Codes.PIR:
                         {
                             string accession = headerParts[++index];
                             string name = headerParts[++index];
                             yield return new PIRIdentifier(accession, name);
+                        }
+                        break;
+                    case Constants.Codes.PreGrantPatent:
+                        {
+                            string country = headerParts[++index];
+                            string applicationNumber = headerParts[++index];
+                            string sequenceNumber = headerParts[++index];
+                            yield return new PreGrantPatentIdentifier(country, applicationNumber, sequenceNumber);
+                        }
+                        break;
+                    case Constants.Codes.RefSeq:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new RefSeqIdentifier(accession, name);
                         }
                         break;
                     case Constants.Codes.SWISSPROT:

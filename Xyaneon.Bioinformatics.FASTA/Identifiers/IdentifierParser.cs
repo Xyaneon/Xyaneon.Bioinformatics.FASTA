@@ -76,15 +76,27 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
                 case Constants.Codes.EMBL:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.EMBL, 3, identifierParts);
                     return new EMBLIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.GenInfoIntegratedDatabase:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.GenInfoIntegratedDatabase, 2, identifierParts);
+                    return new IntegratedDatabaseIdentifier(int.Parse(identifierParts[1]));
                 case Constants.Codes.ImportId:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.ImportId, 2, identifierParts);
                     return new ImportIdIdentifier(int.Parse(identifierParts[1]));
                 case Constants.Codes.Local:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.Local, 2, identifierParts);
                     return new LocalIdentifier(identifierParts[1]);
+                case Constants.Codes.Patent:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.Patent, 4, identifierParts);
+                    return new PatentIdentifier(identifierParts[1], identifierParts[2], identifierParts[3]);
                 case Constants.Codes.PIR:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PIR, 3, identifierParts);
                     return new PIRIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.PreGrantPatent:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PreGrantPatent, 4, identifierParts);
+                    return new PreGrantPatentIdentifier(identifierParts[1], identifierParts[2], identifierParts[3]);
+                case Constants.Codes.RefSeq:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.RefSeq, 3, identifierParts);
+                    return new RefSeqIdentifier(identifierParts[1], identifierParts[2]);
                 case Constants.Codes.SWISSPROT:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.SWISSPROT, 3, identifierParts);
                     return new SWISSPROTIdentifier(identifierParts[1], identifierParts[2]);
