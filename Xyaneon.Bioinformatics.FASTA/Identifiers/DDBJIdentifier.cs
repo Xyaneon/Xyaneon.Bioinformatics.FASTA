@@ -3,35 +3,35 @@
 namespace Xyaneon.Bioinformatics.FASTA.Identifiers
 {
     /// <summary>
-    /// A PIR FASTA identifier.
+    /// A DDBJ FASTA identifier.
     /// </summary>
-    public sealed class PIRIdentifier : Identifier
+    public sealed class DDBJIdentifier : Identifier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PIRIdentifier"/> class.
+        /// Initializes a new instance of the <see cref="DDBJIdentifier"/> class.
         /// </summary>
         /// <param name="accession">The accession number.</param>
-        /// <param name="name">The name.</param>
+        /// <param name="locus">The locus number.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="accession"/> is <see langword="null"/>.
         /// -or-
-        /// <paramref name="name"/> is <see langword="null"/>.
+        /// <paramref name="locus"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="accession"/> is empty or all whitespace.
         /// -or-
-        /// <paramref name="name"/> is empty or all whitespace.
+        /// <paramref name="locus"/> is empty or all whitespace.
         /// </exception>
-        public PIRIdentifier(string accession, string name) : base(Constants.Codes.PIR)
+        public DDBJIdentifier(string accession, string locus) : base(Constants.Codes.DDBJ)
         {
             if (accession == null)
             {
                 throw new ArgumentNullException(nameof(accession), "The accession number cannot be null.");
             }
 
-            if (name == null)
+            if (locus == null)
             {
-                throw new ArgumentNullException(nameof(name), "The name cannot be null.");
+                throw new ArgumentNullException(nameof(locus), "The locus number cannot be null.");
             }
 
             if (string.IsNullOrWhiteSpace(accession))
@@ -39,13 +39,13 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
                 throw new ArgumentException("The accession number cannot be empty or all whitespace.", nameof(accession));
             }
 
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(locus))
             {
-                throw new ArgumentException("The name cannot be empty or all whitespace.", nameof(name));
+                throw new ArgumentException("The locus number cannot be empty or all whitespace.", nameof(locus));
             }
 
             Accession = accession;
-            Name = name;
+            Locus = locus;
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
         public string Accession { get; }
 
         /// <summary>
-        /// Gets the name of this identifier.
+        /// Gets the locus number of this identifier.
         /// </summary>
-        public string Name { get; }
+        public string Locus { get; }
 
         /// <summary>
         /// Returns the string representation of this identifier, as it would
@@ -65,7 +65,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
         /// <returns>The string representation of this identifier.</returns>
         public override string ToString()
         {
-            return $"{Code}|{Accession}|{Name}";
+            return $"{Code}|{Accession}|{Locus}";
         }
     }
 }

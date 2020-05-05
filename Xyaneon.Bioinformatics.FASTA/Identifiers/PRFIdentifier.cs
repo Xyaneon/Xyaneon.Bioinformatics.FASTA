@@ -3,12 +3,12 @@
 namespace Xyaneon.Bioinformatics.FASTA.Identifiers
 {
     /// <summary>
-    /// A PIR FASTA identifier.
+    /// A PRF FASTA identifier.
     /// </summary>
-    public sealed class PIRIdentifier : Identifier
+    public sealed class PRFIdentifier : Identifier
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PIRIdentifier"/> class.
+        /// Initializes a new instance of the <see cref="PRFIdentifier"/> class.
         /// </summary>
         /// <param name="accession">The accession number.</param>
         /// <param name="name">The name.</param>
@@ -22,7 +22,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
         /// -or-
         /// <paramref name="name"/> is empty or all whitespace.
         /// </exception>
-        public PIRIdentifier(string accession, string name) : base(Constants.Codes.PIR)
+        public PRFIdentifier(string accession, string name) : base(Constants.Codes.PRF)
         {
             if (accession == null)
             {

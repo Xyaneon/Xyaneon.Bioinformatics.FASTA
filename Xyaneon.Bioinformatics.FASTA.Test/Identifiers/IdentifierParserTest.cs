@@ -52,6 +52,18 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
         }
 
         [TestMethod]
+        public void Parse_ShouldParseDDBJIdentifier()
+        {
+            var expected = new DDBJIdentifier("BAC85684.1", "1");
+            var actual = IdentifierParser.Parse("dbj|BAC85684.1|1") as DDBJIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Locus, actual.Locus);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseGenBankIdentifier()
         {
             var expected = new GenBankIdentifier("M73307", "AGMA13GT");
@@ -73,6 +85,18 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
             Assert.AreEqual(expected.Code, actual.Code);
             Assert.AreEqual(expected.Accession, actual.Accession);
             Assert.AreEqual(expected.Locus, actual.Locus);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseGeneralDatabaseReferenceIdentifier()
+        {
+            var expected = new GeneralDatabaseReferenceIdentifier("taxon", "9606");
+            var actual = IdentifierParser.Parse("gnl|taxon|9606") as GeneralDatabaseReferenceIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Database, actual.Database);
+            Assert.AreEqual(expected.Value, actual.Value);
         }
 
         [TestMethod]
@@ -122,10 +146,34 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
         }
 
         [TestMethod]
+        public void Parse_ShouldParsePDBIdentifier()
+        {
+            var expected = new PDBIdentifier("1I4L", "D");
+            var actual = IdentifierParser.Parse("pdb|1I4L|D") as PDBIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Entry, actual.Entry);
+            Assert.AreEqual(expected.Chain, actual.Chain);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParsePIRIdentifier()
         {
             var expected = new PIRIdentifier("M73307", "AGMA13GT");
             var actual = IdentifierParser.Parse("pir|M73307|AGMA13GT") as PIRIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParsePRFIdentifier()
+        {
+            var expected = new PRFIdentifier("ACCESSION", "0806162C");
+            var actual = IdentifierParser.Parse("prf|ACCESSION|0806162C") as PRFIdentifier;
 
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected.Code, actual.Code);

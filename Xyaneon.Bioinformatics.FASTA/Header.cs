@@ -132,6 +132,13 @@ namespace Xyaneon.Bioinformatics.FASTA
                     case Constants.Codes.BackboneSeqID:
                         yield return new BackboneSeqIdIdentifier(int.Parse(headerParts[++index]));
                         break;
+                    case Constants.Codes.DDBJ:
+                        {
+                            string accession = headerParts[++index];
+                            string locus = headerParts[++index];
+                            yield return new DDBJIdentifier(accession, locus);
+                        }
+                        break;
                     case Constants.Codes.EMBL:
                         {
                             string accession = headerParts[++index];
@@ -149,6 +156,13 @@ namespace Xyaneon.Bioinformatics.FASTA
                             yield return new GenBankIdentifier(accession, locus);
                         }
                         break;
+                    case Constants.Codes.GeneralDatabaseReference:
+                        {
+                            string database = headerParts[++index];
+                            string value = headerParts[++index];
+                            yield return new GeneralDatabaseReferenceIdentifier(database, value);
+                        }
+                        break;
                     case Constants.Codes.GenInfoIntegratedDatabase:
                         yield return new IntegratedDatabaseIdentifier(int.Parse(headerParts[++index]));
                         break;
@@ -163,11 +177,25 @@ namespace Xyaneon.Bioinformatics.FASTA
                             yield return new PatentIdentifier(country, patent, sequenceNumber);
                         }
                         break;
+                    case Constants.Codes.PDB:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new PDBIdentifier(accession, name);
+                        }
+                        break;
                     case Constants.Codes.PIR:
                         {
                             string accession = headerParts[++index];
                             string name = headerParts[++index];
                             yield return new PIRIdentifier(accession, name);
+                        }
+                        break;
+                    case Constants.Codes.PRF:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new PRFIdentifier(accession, name);
                         }
                         break;
                     case Constants.Codes.PreGrantPatent:

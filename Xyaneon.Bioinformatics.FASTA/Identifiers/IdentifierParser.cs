@@ -73,9 +73,15 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
                 case Constants.Codes.GenBank:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.GenBank, 3, identifierParts);
                     return new GenBankIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.DDBJ:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.DDBJ, 3, identifierParts);
+                    return new DDBJIdentifier(identifierParts[1], identifierParts[2]);
                 case Constants.Codes.EMBL:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.EMBL, 3, identifierParts);
                     return new EMBLIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.GeneralDatabaseReference:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.GeneralDatabaseReference, 3, identifierParts);
+                    return new GeneralDatabaseReferenceIdentifier(identifierParts[1], identifierParts[2]);
                 case Constants.Codes.GenInfoIntegratedDatabase:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.GenInfoIntegratedDatabase, 2, identifierParts);
                     return new IntegratedDatabaseIdentifier(int.Parse(identifierParts[1]));
@@ -88,9 +94,15 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
                 case Constants.Codes.Patent:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.Patent, 4, identifierParts);
                     return new PatentIdentifier(identifierParts[1], identifierParts[2], identifierParts[3]);
+                case Constants.Codes.PDB:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PDB, 3, identifierParts);
+                    return new PDBIdentifier(identifierParts[1], identifierParts[2]);
                 case Constants.Codes.PIR:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PIR, 3, identifierParts);
                     return new PIRIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.PRF:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PRF, 3, identifierParts);
+                    return new PRFIdentifier(identifierParts[1], identifierParts[2]);
                 case Constants.Codes.PreGrantPatent:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.PreGrantPatent, 4, identifierParts);
                     return new PreGrantPatentIdentifier(identifierParts[1], identifierParts[2], identifierParts[3]);

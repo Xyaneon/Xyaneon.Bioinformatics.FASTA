@@ -86,6 +86,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithDDBJIdentifier()
+        {
+            Header header = Header.Parse(">dbj|ACCESSION|LOCUS");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(DDBJIdentifier));
+            var identifier = (DDBJIdentifier)header.Items[0];
+            Assert.AreEqual("dbj", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("LOCUS", identifier.Locus);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithEMBLIdentifier()
         {
             Header header = Header.Parse(">emb|ACCESSION|LOCUS");
@@ -111,6 +125,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.AreEqual("gb", identifier.Code);
             Assert.AreEqual("123", identifier.Accession);
             Assert.AreEqual("456", identifier.Locus);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithGeneralDatabaseReferenceIdentifier()
+        {
+            Header header = Header.Parse(">gnl|DATABASE|VALUE");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(GeneralDatabaseReferenceIdentifier));
+            var identifier = (GeneralDatabaseReferenceIdentifier)header.Items[0];
+            Assert.AreEqual("gnl", identifier.Code);
+            Assert.AreEqual("DATABASE", identifier.Database);
+            Assert.AreEqual("VALUE", identifier.Value);
         }
 
         [TestMethod]
@@ -168,6 +196,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithPDBIdentifier()
+        {
+            Header header = Header.Parse(">pdb|ENTRY|CHAIN");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(PDBIdentifier));
+            var identifier = (PDBIdentifier)header.Items[0];
+            Assert.AreEqual("pdb", identifier.Code);
+            Assert.AreEqual("ENTRY", identifier.Entry);
+            Assert.AreEqual("CHAIN", identifier.Chain);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithPIRIdentifier()
         {
             Header header = Header.Parse(">pir|ACCESSION|NAME");
@@ -177,6 +219,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.IsInstanceOfType(header.Items[0], typeof(PIRIdentifier));
             var identifier = (PIRIdentifier)header.Items[0];
             Assert.AreEqual("pir", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithPRFIdentifier()
+        {
+            Header header = Header.Parse(">prf|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(PRFIdentifier));
+            var identifier = (PRFIdentifier)header.Items[0];
+            Assert.AreEqual("prf", identifier.Code);
             Assert.AreEqual("ACCESSION", identifier.Accession);
             Assert.AreEqual("NAME", identifier.Name);
         }
@@ -197,7 +253,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
-        public void Parse_ShouldParseHeaderWithRefSeqdentifier()
+        public void Parse_ShouldParseHeaderWithRefSeqIdentifier()
         {
             Header header = Header.Parse(">ref|ACCESSION|NAME");
 
