@@ -281,6 +281,48 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithThirdPartyDDBJIdentifier()
+        {
+            Header header = Header.Parse(">tpd|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(ThirdPartyDDBJIdentifier));
+            var identifier = (ThirdPartyDDBJIdentifier)header.Items[0];
+            Assert.AreEqual("tpd", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithThirdPartyEMBLIdentifier()
+        {
+            Header header = Header.Parse(">tpe|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(ThirdPartyEMBLIdentifier));
+            var identifier = (ThirdPartyEMBLIdentifier)header.Items[0];
+            Assert.AreEqual("tpe", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseHeaderWithThirdPartyGenBankIdentifier()
+        {
+            Header header = Header.Parse(">tpg|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(ThirdPartyGenBankIdentifier));
+            var identifier = (ThirdPartyGenBankIdentifier)header.Items[0];
+            Assert.AreEqual("tpg", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithLocalIdentifierAndDescription()
         {
             Header header = Header.Parse(">lcl|123|Sample description goes here");

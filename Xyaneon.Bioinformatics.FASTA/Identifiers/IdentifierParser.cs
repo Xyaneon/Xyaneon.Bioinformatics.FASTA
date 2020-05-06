@@ -112,6 +112,15 @@ namespace Xyaneon.Bioinformatics.FASTA.Identifiers
                 case Constants.Codes.SWISSPROT:
                     ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.SWISSPROT, 3, identifierParts);
                     return new SWISSPROTIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.ThirdPartyDDBJ:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.ThirdPartyDDBJ, 3, identifierParts);
+                    return new ThirdPartyDDBJIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.ThirdPartyEMBL:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.ThirdPartyEMBL, 3, identifierParts);
+                    return new ThirdPartyEMBLIdentifier(identifierParts[1], identifierParts[2]);
+                case Constants.Codes.ThirdPartyGenBank:
+                    ThrowIfWrongNumberOfPartsForIdentifier(Constants.Codes.ThirdPartyGenBank, 3, identifierParts);
+                    return new ThirdPartyGenBankIdentifier(identifierParts[1], identifierParts[2]);
                 default:
                     throw new NotSupportedException($"\"{identifierParts[0]}\" is not a recognized identifier code.");
             }

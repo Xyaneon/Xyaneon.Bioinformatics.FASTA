@@ -220,6 +220,27 @@ namespace Xyaneon.Bioinformatics.FASTA
                             yield return new SWISSPROTIdentifier(accession, name);
                         }
                         break;
+                    case Constants.Codes.ThirdPartyDDBJ:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new ThirdPartyDDBJIdentifier(accession, name);
+                        }
+                        break;
+                    case Constants.Codes.ThirdPartyEMBL:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new ThirdPartyEMBLIdentifier(accession, name);
+                        }
+                        break;
+                    case Constants.Codes.ThirdPartyGenBank:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new ThirdPartyGenBankIdentifier(accession, name);
+                        }
+                        break;
                     default:
                         yield return new Description(headerParts[index]);
                         break;

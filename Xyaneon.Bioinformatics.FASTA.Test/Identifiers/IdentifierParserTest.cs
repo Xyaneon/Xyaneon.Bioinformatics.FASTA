@@ -217,5 +217,41 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
             Assert.AreEqual(expected.Accession, actual.Accession);
             Assert.AreEqual(expected.Name, actual.Name);
         }
+
+        [TestMethod]
+        public void Parse_ShouldParseThirdPartyDDBJIdentifier()
+        {
+            var expected = new ThirdPartyDDBJIdentifier("FAA00017", "NAME");
+            var actual = IdentifierParser.Parse("tpd|FAA00017|NAME") as ThirdPartyDDBJIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseThirdPartyEMBLIdentifier()
+        {
+            var expected = new ThirdPartyEMBLIdentifier("BN000123", "NAME");
+            var actual = IdentifierParser.Parse("tpe|BN000123|NAME") as ThirdPartyEMBLIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
+
+        [TestMethod]
+        public void Parse_ShouldParseThirdPartyGenBankIdentifier()
+        {
+            var expected = new ThirdPartyGenBankIdentifier("BK003456", "NAME");
+            var actual = IdentifierParser.Parse("tpg|BK003456|NAME") as ThirdPartyGenBankIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
     }
 }
