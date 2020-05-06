@@ -8,7 +8,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Utility
 {
     internal static class StreamUtility
     {
-        public static IEnumerable<string> ReadAllLinesFromStream(Stream stream)
+        public static IEnumerable<string> ReadAllLines(Stream stream)
         {
             var lines = new List<string>();
 
@@ -23,7 +23,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Utility
             return lines;
         }
 
-        public static async Task<IEnumerable<string>> ReadAllLinesFromStreamAsync(Stream stream, CancellationToken cancellationToken = default)
+        public static async Task<IEnumerable<string>> ReadAllLinesAsync(Stream stream, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -46,6 +46,38 @@ namespace Xyaneon.Bioinformatics.FASTA.Utility
             }
 
             return lines;
+        }
+
+        public static void WriteAllLines(Stream stream, IEnumerable<string> lines)
+        {
+            using (StreamWriter streamWriter = new StreamWriter(stream))
+            {
+                foreach (string line in lines)
+                {
+                    streamWriter.WriteLine(line);
+                }
+            }
+        }
+
+        public static async Task WriteAllLinesAsync(Stream stream, IEnumerable<string> lines, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException("Writing all stream lines async canceled before write.", cancellationToken);
+            }
+
+            using (StreamWriter streamWriter = new StreamWriter(stream))
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException("Writing all stream lines async canceled during write.", cancellationToken);
+                }
+
+                foreach (string line in lines)
+                {
+                    await streamWriter.WriteLineAsync(line);
+                }
+            }
         }
     }
 }

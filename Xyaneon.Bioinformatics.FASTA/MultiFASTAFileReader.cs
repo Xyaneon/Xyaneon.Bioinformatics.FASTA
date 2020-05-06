@@ -126,7 +126,7 @@ namespace Xyaneon.Bioinformatics.FASTA
 
             using (FileStream fileStream = File.OpenRead(path))
             {
-                fileLines = await StreamUtility.ReadAllLinesFromStreamAsync(fileStream, cancellationToken);
+                fileLines = await StreamUtility.ReadAllLinesAsync(fileStream, cancellationToken);
             }
 
             return MultiFASTAFileData.Parse(fileLines);
@@ -164,7 +164,7 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new ArgumentNullException(nameof(stream), "The stream to read multi-sequence FASTA file data from cannot be null.");
             }
 
-            IEnumerable<string> fileLines = StreamUtility.ReadAllLinesFromStream(stream);
+            IEnumerable<string> fileLines = StreamUtility.ReadAllLines(stream);
             return MultiFASTAFileData.Parse(fileLines);
         }
 
@@ -202,7 +202,7 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new OperationCanceledException("Reading multi FASTA file data stream async canceled before read.", cancellationToken);
             }
 
-            IEnumerable<string> fileLines = await StreamUtility.ReadAllLinesFromStreamAsync(stream, cancellationToken);
+            IEnumerable<string> fileLines = await StreamUtility.ReadAllLinesAsync(stream, cancellationToken);
 
             return MultiFASTAFileData.Parse(fileLines);
         }

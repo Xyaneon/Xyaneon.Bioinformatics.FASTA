@@ -13,8 +13,12 @@ namespace Xyaneon.Bioinformatics.FASTA
     /// </summary>
     /// <seealso cref="MultiFASTAFileReader"/>
     /// <seealso cref="SingleFASTAFileData"/>
+    /// <seealso cref="SingleFASTAFileWriter"/>
     public static class SingleFASTAFileReader
     {
+        private const string ArgumentNullException_Path = "The path to the single-sequence FASTA file cannot be null.";
+        private const string ArgumentNullException_Stream = "The stream to read single-sequence FASTA file data from cannot be null.";
+
         /// <summary>
         /// Reads a FASTA file containing a single sequence and returns its
         /// data.
@@ -64,7 +68,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         {
             if (path == null)
             {
-                throw new ArgumentNullException(nameof(path), "The path to the single-sequence FASTA file cannot be null.");
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
             IEnumerable<string> fileLines = File.ReadLines(path);
@@ -120,14 +124,14 @@ namespace Xyaneon.Bioinformatics.FASTA
         {
             if (path == null)
             {
-                throw new ArgumentNullException(nameof(path), "The path to the single-sequence FASTA file cannot be null.");
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
             IEnumerable<string> fileLines;
 
             using (FileStream fileStream = File.OpenRead(path))
             {
-                fileLines = await StreamUtility.ReadAllLinesFromStreamAsync(fileStream, cancellationToken);
+                fileLines = await StreamUtility.ReadAllLinesAsync(fileStream, cancellationToken);
             }
             
             return SingleFASTAFileData.Parse(fileLines);
@@ -143,7 +147,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <see cref="SingleFASTAFileData"/> instance.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> is <see langword="null"/>.
+        /// <paramref name="stream"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="FormatException">
         /// The file data is in an invalid format.
@@ -162,10 +166,10 @@ namespace Xyaneon.Bioinformatics.FASTA
         {
             if (stream == null)
             {
-                throw new ArgumentNullException(nameof(stream), "The stream to read single-sequence FASTA file data from cannot be null.");
+                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
             }
 
-            IEnumerable<string> fileLines = StreamUtility.ReadAllLinesFromStream(stream);
+            IEnumerable<string> fileLines = StreamUtility.ReadAllLines(stream);
             return SingleFASTAFileData.Parse(fileLines);
         }
 
@@ -180,7 +184,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <see cref="SingleFASTAFileData"/> instance.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="path"/> is <see langword="null"/>.
+        /// <paramref name="stream"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="FormatException">
         /// The file data is in an invalid format.
@@ -195,7 +199,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         {
             if (stream == null)
             {
-                throw new ArgumentNullException(nameof(stream), "The stream to read single-sequence FASTA file data from cannot be null.");
+                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
             }
 
             if (cancellationToken.IsCancellationRequested)
@@ -203,7 +207,7 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new OperationCanceledException("Reading single FASTA file data stream async canceled before read.", cancellationToken);
             }
 
-            IEnumerable<string> fileLines = await StreamUtility.ReadAllLinesFromStreamAsync(stream, cancellationToken);
+            IEnumerable<string> fileLines = await StreamUtility.ReadAllLinesAsync(stream, cancellationToken);
 
             return SingleFASTAFileData.Parse(fileLines);
         }
