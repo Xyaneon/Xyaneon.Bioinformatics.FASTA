@@ -91,6 +91,42 @@ namespace Xyaneon.Bioinformatics.FASTA
             return ParseBase(lines);
         }
 
+        /// <summary>
+        /// Gets the interleaved (multiline sequence) representation of this
+        /// <see cref="SingleFASTAFileData"/> object.
+        /// </summary>
+        /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
+        /// <returns>The interleaved file lines as a collection of strings.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="lineLength"/> is less than one.
+        /// </exception>
+        /// <seealso cref="ToSequentialLines"/>
+        public IEnumerable<string> ToInterleavedLines(int lineLength = Constants.DefaultLineLength)
+        {
+            if (lineLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
+            }
+
+            yield return Header.ToString();
+            foreach (string line in Data.ToLines(lineLength))
+            {
+                yield return line;
+            }
+        }
+
+        /// <summary>
+        /// Gets the sequential (single-line sequence) representation of this
+        /// <see cref="SingleFASTAFileData"/> object.
+        /// </summary>
+        /// <returns>The sequential file lines as a collection of strings.</returns>
+        /// <seealso cref="ToInterleavedLines(int)"/>
+        public IEnumerable<string> ToSequentialLines()
+        {
+            yield return Header.ToString();
+            yield return Data.ToString();
+        }
+
         private static SingleFASTAFileData ParseBase(IEnumerable<string> lines)
         {
             try
