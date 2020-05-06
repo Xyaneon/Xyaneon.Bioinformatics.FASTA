@@ -323,6 +323,20 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         }
 
         [TestMethod]
+        public void Parse_ShouldParseHeaderWithTrEMBLIdentifier()
+        {
+            Header header = Header.Parse(">tr|ACCESSION|NAME");
+
+            Assert.IsNotNull(header);
+            Assert.AreEqual(1, header.Items.Count);
+            Assert.IsInstanceOfType(header.Items[0], typeof(TrEMBLIdentifier));
+            var identifier = (TrEMBLIdentifier)header.Items[0];
+            Assert.AreEqual("tr", identifier.Code);
+            Assert.AreEqual("ACCESSION", identifier.Accession);
+            Assert.AreEqual("NAME", identifier.Name);
+        }
+
+        [TestMethod]
         public void Parse_ShouldParseHeaderWithLocalIdentifierAndDescription()
         {
             Header header = Header.Parse(">lcl|123|Sample description goes here");

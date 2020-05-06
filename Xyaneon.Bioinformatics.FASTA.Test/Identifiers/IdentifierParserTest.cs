@@ -253,5 +253,17 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Identifiers
             Assert.AreEqual(expected.Accession, actual.Accession);
             Assert.AreEqual(expected.Name, actual.Name);
         }
+
+        [TestMethod]
+        public void Parse_ShouldParseTrEMBLIdentifier()
+        {
+            var expected = new TrEMBLIdentifier("Q90RT2", "Q90RT2_9HIV1");
+            var actual = IdentifierParser.Parse("tr|Q90RT2|Q90RT2_9HIV1") as TrEMBLIdentifier;
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expected.Code, actual.Code);
+            Assert.AreEqual(expected.Accession, actual.Accession);
+            Assert.AreEqual(expected.Name, actual.Name);
+        }
     }
 }

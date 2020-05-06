@@ -241,6 +241,13 @@ namespace Xyaneon.Bioinformatics.FASTA
                             yield return new ThirdPartyGenBankIdentifier(accession, name);
                         }
                         break;
+                    case Constants.Codes.TrEMBL:
+                        {
+                            string accession = headerParts[++index];
+                            string name = headerParts[++index];
+                            yield return new TrEMBLIdentifier(accession, name);
+                        }
+                        break;
                     default:
                         yield return new Description(headerParts[index]);
                         break;
