@@ -3,14 +3,29 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
+using Xyaneon.Bioinformatics.FASTA.IO;
 using Xyaneon.Bioinformatics.FASTA.Sequences;
 using Xyaneon.Bioinformatics.FASTA.Test.Extensions;
 
-namespace Xyaneon.Bioinformatics.FASTA.Test
+namespace Xyaneon.Bioinformatics.FASTA.Test.IO
 {
     [TestClass]
     public class SingleFASTAFileReaderTest
     {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ReadFromFile_ShouldRejectNullPath()
+        {
+            _ = SingleFASTAFileReader.ReadFromFile(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task ReadFromFileAsync_ShouldRejectNullPath()
+        {
+            _ = await SingleFASTAFileReader.ReadFromFileAsync(null);
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ReadFromStream_ShouldRejectNullStream()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Sequences;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
-namespace Xyaneon.Bioinformatics.FASTA
+namespace Xyaneon.Bioinformatics.FASTA.IO
 {
     /// <summary>
     /// Writes single-sequence FASTA file data.
@@ -66,6 +66,8 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// -or-
         /// The caller does not have the required permission.
         /// </exception>
+        /// <seealso cref="WriteToInterleavedFileAsync(SingleFASTAFileData, string, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialFile(SingleFASTAFileData, string)"/>
         public static void WriteToInterleavedFile(SingleFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength)
         {
             if (data == null)
@@ -86,6 +88,46 @@ namespace Xyaneon.Bioinformatics.FASTA
             File.WriteAllLines(path, data.ToInterleavedLines(lineLength));
         }
 
+        /// <summary>
+        /// Writes interleaved (multiline) data for a single FASTA sequence
+        /// to the file at the given <paramref name="path"/> asynchronously.
+        /// </summary>
+        /// <param name="data">The sequence data to write.</param>
+        /// <param name="path">The file to write.</param>
+        /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
+        /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
+        /// <returns>A <see cref="Task"/> representing the ongoing operation.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="data"/> is <see langword="null"/>.
+        /// -or-
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="lineLength"/> is less than one.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified path is invalid, (for example, it is on an unmapped
+        /// drive).
+        /// </exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined
+        /// maximum length.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// -or-
+        /// <paramref name="path"/> specified a read-only file or directory.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFile(SingleFASTAFileData, string, int)"/>
+        /// <seealso cref="WriteToSequentialFileAsync(SingleFASTAFileData, string, CancellationToken)"/>
         public static async Task WriteToInterleavedFileAsync(SingleFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
             if (data == null)
@@ -98,6 +140,11 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
+            if (lineLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
+            }
+
             if (cancellationToken.IsCancellationRequested)
             {
                 throw new OperationCanceledException("Writing single interleaved FASTA file data stream async canceled before write.", cancellationToken);
@@ -106,6 +153,32 @@ namespace Xyaneon.Bioinformatics.FASTA
             await FileUtility.WriteAllLinesAsync(path, data.ToInterleavedLines(lineLength), cancellationToken);
         }
 
+        /// <summary>
+        /// Writes interleaved (multiline) data for a single FASTA sequence
+        /// to the given <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="data">The sequence data to write.</param>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="data"/> is <see langword="null"/>.
+        /// -or-
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="lineLength"/> is less than one.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="stream"/> is not writable.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        /// <paramref name="stream"/> is closed.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedStreamAsync(SingleFASTAFileData, Stream, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialStream(SingleFASTAFileData, Stream)"/>
         public static void WriteToInterleavedStream(SingleFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength)
         {
             if (data == null)
@@ -121,6 +194,37 @@ namespace Xyaneon.Bioinformatics.FASTA
             StreamUtility.WriteAllLines(stream, data.ToInterleavedLines(lineLength));
         }
 
+        /// <summary>
+        /// Writes interleaved (multiline) data for a single FASTA sequence
+        /// to the given <paramref name="stream"/> asynchronously.
+        /// </summary>
+        /// <param name="data">The sequence data to write.</param>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
+        /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
+        /// <returns>A <see cref="Task"/> representing the ongoing operation.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="data"/> is <see langword="null"/>.
+        /// -or-
+        /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="lineLength"/> is less than one.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="stream"/> is not writable.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        /// <paramref name="stream"/> is closed.
+        /// </exception>
+        /// <exception cref="OperationCanceledException">
+        /// The ongoing operation was canceled.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedStream(SingleFASTAFileData, Stream, int)"/>
+        /// <seealso cref="WriteToSequentialStreamAsync(SingleFASTAFileData, Stream, CancellationToken)"/>
         public static async Task WriteToInterleavedStreamAsync(SingleFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
             if (data == null)
@@ -208,6 +312,28 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified path is invalid, (for example, it is on an unmapped
+        /// drive).
+        /// </exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined
+        /// maximum length.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// -or-
+        /// <paramref name="path"/> specified a read-only file or directory.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFileAsync(SingleFASTAFileData, string, int, CancellationToken)"/>
         /// <seealso cref="WriteToSequentialFile(SingleFASTAFileData, string)"/>
         public static async Task WriteToSequentialFileAsync(SingleFASTAFileData data, string path, CancellationToken cancellationToken = default)
         {

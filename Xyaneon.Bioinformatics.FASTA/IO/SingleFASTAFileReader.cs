@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
-namespace Xyaneon.Bioinformatics.FASTA
+namespace Xyaneon.Bioinformatics.FASTA.IO
 {
     /// <summary>
     /// Reads single-sequence FASTA file data.
@@ -133,7 +133,7 @@ namespace Xyaneon.Bioinformatics.FASTA
             {
                 fileLines = await StreamUtility.ReadAllLinesAsync(fileStream, cancellationToken);
             }
-            
+
             return SingleFASTAFileData.Parse(fileLines);
         }
 
