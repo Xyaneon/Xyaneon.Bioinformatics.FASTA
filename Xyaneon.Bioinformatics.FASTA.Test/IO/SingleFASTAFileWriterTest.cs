@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using Xyaneon.Bioinformatics.FASTA.IO;
@@ -53,6 +54,100 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             var data = new SingleFASTAFileData(header, sequence);
 
             SingleFASTAFileWriter.WriteToInterleavedFile(data, Path, -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WriteToInterleavedStream_ShouldRejectNullData()
+        {
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            SingleFASTAFileWriter.WriteToInterleavedStream(null, stream);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WriteToInterleavedStream_ShouldRejectNullStream()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+
+            SingleFASTAFileWriter.WriteToInterleavedStream(data, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void WriteToInterleavedStream_ShouldRejectLineLengthOfZero()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            SingleFASTAFileWriter.WriteToInterleavedStream(data, stream, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void WriteToInterleavedStream_ShouldRejectNegativeLineLength()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            SingleFASTAFileWriter.WriteToInterleavedStream(data, stream, -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToInterleavedStreamAsync_ShouldRejectNullData()
+        {
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            await SingleFASTAFileWriter.WriteToInterleavedStreamAsync(null, stream);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToInterleavedStreamAsync_ShouldRejectNullStream()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+
+            await SingleFASTAFileWriter.WriteToInterleavedStreamAsync(data, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public async Task WriteToInterleavedStreamAsync_ShouldRejectLineLengthOfZero()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            await SingleFASTAFileWriter.WriteToInterleavedStreamAsync(data, stream, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public async Task WriteToInterleavedStreamAsync_ShouldRejectNegativeLineLength()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            await SingleFASTAFileWriter.WriteToInterleavedStreamAsync(data, stream, -1);
         }
 
         [TestMethod]
@@ -119,6 +214,27 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void WriteToSequentialStream_ShouldRejectNullData()
+        {
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            SingleFASTAFileWriter.WriteToSequentialStream(null, stream);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WriteToSequentialStream_ShouldRejectNullPath()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+
+            SingleFASTAFileWriter.WriteToSequentialStream(data, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public async Task WriteToSequentialFileAsync_ShouldRejectNullData()
         {
             await SingleFASTAFileWriter.WriteToSequentialFileAsync(null, Path);
@@ -134,6 +250,27 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             var data = new SingleFASTAFileData(header, sequence);
 
             await SingleFASTAFileWriter.WriteToSequentialFileAsync(data, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToSequentialStreamAsync_ShouldRejectNullData()
+        {
+            var stream = new MemoryStream(new byte[] { }, true);
+
+            await SingleFASTAFileWriter.WriteToSequentialStreamAsync(null, stream);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToSequentialStreamAsync_ShouldRejectNullPath()
+        {
+            var identifier = new LocalIdentifier("value");
+            var header = new Header(identifier);
+            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var data = new SingleFASTAFileData(header, sequence);
+
+            await SingleFASTAFileWriter.WriteToSequentialStreamAsync(data, null);
         }
     }
 }

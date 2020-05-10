@@ -12,6 +12,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
     [TestClass]
     public class SingleFASTAFileReaderTest
     {
+        private static readonly string ValidInputString = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA");
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ReadFromFile_ShouldRejectNullPath()
@@ -36,8 +38,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         [TestMethod]
         public void ReadFromStream_ShouldProduceExpectedOutputForStream()
         {
-            string inputString = ">lcl|123" + Environment.NewLine + "ATCG" + Environment.NewLine + "AAAA";
-            using Stream stream = inputString.ToStream();
+            using Stream stream = ValidInputString.ToStream();
 
             SingleFASTAFileData sequence = SingleFASTAFileReader.ReadFromStream(stream);
 
@@ -65,8 +66,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         [TestMethod]
         public async Task ReadFromStreamAsync_ShouldProduceExpectedOutputForStream()
         {
-            string inputString = ">lcl|123" + Environment.NewLine + "ATCG" + Environment.NewLine + "AAAA";
-            using Stream stream = inputString.ToStream();
+            using Stream stream = ValidInputString.ToStream();
 
             SingleFASTAFileData sequence = await SingleFASTAFileReader.ReadFromStreamAsync(stream);
 
