@@ -1,4 +1,4 @@
-﻿namespace Xyaneon.Bioinformatics.FASTA
+﻿namespace Xyaneon.Bioinformatics.FASTA.IO
 {
     /// <summary>
     /// Provides constants for FASTA filename extensions.

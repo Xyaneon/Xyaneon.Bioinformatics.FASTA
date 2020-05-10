@@ -28,7 +28,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
         [TestMethod]
         public void ContainsOnlyAminoAcidSequences_ShouldReturnTrueIfAllSequencesAreForAminoAcids()
-        { 
+        {
             var sequences = new SingleFASTAFileData[] {
                 new SingleFASTAFileData(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
                 new SingleFASTAFileData(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("EFGH"))
