@@ -123,6 +123,49 @@ namespace Xyaneon.Bioinformatics.FASTA
             return ParseBase(lines);
         }
 
+        /// <summary>
+        /// Gets the interleaved (multiline sequence) representation of this
+        /// <see cref="MultiFASTAFileData"/> object.
+        /// </summary>
+        /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
+        /// <returns>The interleaved file lines as a collection of strings.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="lineLength"/> is less than one.
+        /// </exception>
+        /// <seealso cref="ToSequentialLines"/>
+        public IEnumerable<string> ToInterleavedLines(int lineLength = Constants.DefaultLineLength)
+        {
+            if (lineLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
+            }
+
+            foreach (SingleFASTAFileData data in SingleFASTASequences)
+            {
+                foreach (string line in data.ToInterleavedLines(lineLength))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the sequential (single-line sequence) representation of this
+        /// <see cref="MultiFASTAFileData"/> object.
+        /// </summary>
+        /// <returns>The sequential file lines as a collection of strings.</returns>
+        /// <seealso cref="ToInterleavedLines(int)"/>
+        public IEnumerable<string> ToSequentialLines()
+        {
+            foreach (SingleFASTAFileData data in SingleFASTASequences)
+            {
+                foreach (string line in data.ToSequentialLines())
+                {
+                    yield return line;
+                }
+            }
+        }
+
         private bool AllSequencesAreOfType(Type type)
         {
             return SingleFASTASequences.All(sequence => sequence.Data.GetType() == type);

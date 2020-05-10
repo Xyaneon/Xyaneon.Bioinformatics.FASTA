@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Sequences;
@@ -9,16 +8,16 @@ using Xyaneon.Bioinformatics.FASTA.Utility;
 namespace Xyaneon.Bioinformatics.FASTA.IO
 {
     /// <summary>
-    /// Writes single-sequence FASTA file data.
+    /// Writes multi-sequence FASTA file data.
     /// </summary>
-    /// <seealso cref="MultiFASTAFileWriter"/>
-    /// <seealso cref="SingleFASTAFileData"/>
-    /// <seealso cref="SingleFASTAFileReader"/>
-    public static class SingleFASTAFileWriter
+    /// <seealso cref="MultiFASTAFileData"/>
+    /// <seealso cref="MultiFASTAFileReader"/>
+    /// <seealso cref="SingleFASTAFileWriter"/>
+    public static class MultiFASTAFileWriter
     {
-        private const string ArgumentNullException_Data = "The single-sequence FASTA data to write cannot be null.";
-        private const string ArgumentNullException_Path = "The path to the single-sequence FASTA file cannot be null.";
-        private const string ArgumentNullException_Stream = "The stream to write the single-sequence FASTA data to cannot be null.";
+        private const string ArgumentNullException_Data = "The multisequence FASTA data to write cannot be null.";
+        private const string ArgumentNullException_Path = "The path to the multisequence FASTA file cannot be null.";
+        private const string ArgumentNullException_Stream = "The stream to write the multisequence FASTA data to cannot be null.";
 
         /// <summary>
         /// Writes interleaved (multiline) data for a single FASTA sequence
@@ -67,9 +66,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// -or-
         /// The caller does not have the required permission.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedFileAsync(SingleFASTAFileData, string, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialFile(SingleFASTAFileData, string)"/>
-        public static void WriteToInterleavedFile(SingleFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength)
+        /// <seealso cref="WriteToInterleavedFileAsync(MultiFASTAFileData, string, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialFile(MultiFASTAFileData, string)"/>
+        public static void WriteToInterleavedFile(MultiFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength)
         {
             if (data == null)
             {
@@ -127,9 +126,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// -or-
         /// <paramref name="path"/> specified a read-only file or directory.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedFile(SingleFASTAFileData, string, int)"/>
-        /// <seealso cref="WriteToSequentialFileAsync(SingleFASTAFileData, string, CancellationToken)"/>
-        public static async Task WriteToInterleavedFileAsync(SingleFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
+        /// <seealso cref="WriteToInterleavedFile(MultiFASTAFileData, string, int)"/>
+        /// <seealso cref="WriteToSequentialFileAsync(MultiFASTAFileData, string, CancellationToken)"/>
+        public static async Task WriteToInterleavedFileAsync(MultiFASTAFileData data, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
             if (data == null)
             {
@@ -148,7 +147,7 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
 
             if (cancellationToken.IsCancellationRequested)
             {
-                throw new OperationCanceledException("Writing single interleaved FASTA file data stream async canceled before write.", cancellationToken);
+                throw new OperationCanceledException("Writing multiple interleaved FASTA file data stream async canceled before write.", cancellationToken);
             }
 
             await FileUtility.WriteAllLinesAsync(path, data.ToInterleavedLines(lineLength), cancellationToken);
@@ -178,9 +177,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="stream"/> is closed.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStreamAsync(SingleFASTAFileData, Stream, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialStream(SingleFASTAFileData, Stream)"/>
-        public static void WriteToInterleavedStream(SingleFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength)
+        /// <seealso cref="WriteToInterleavedStreamAsync(MultiFASTAFileData, Stream, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialStream(MultiFASTAFileData, Stream)"/>
+        public static void WriteToInterleavedStream(MultiFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength)
         {
             if (data == null)
             {
@@ -224,9 +223,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <exception cref="OperationCanceledException">
         /// The ongoing operation was canceled.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStream(SingleFASTAFileData, Stream, int)"/>
-        /// <seealso cref="WriteToSequentialStreamAsync(SingleFASTAFileData, Stream, CancellationToken)"/>
-        public static async Task WriteToInterleavedStreamAsync(SingleFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
+        /// <seealso cref="WriteToInterleavedStream(MultiFASTAFileData, Stream, int)"/>
+        /// <seealso cref="WriteToSequentialStreamAsync(MultiFASTAFileData, Stream, CancellationToken)"/>
+        public static async Task WriteToInterleavedStreamAsync(MultiFASTAFileData data, Stream stream, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
             if (data == null)
             {
@@ -284,9 +283,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// -or-
         /// The caller does not have the required permission.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedFile(SingleFASTAFileData, string, int)"/>
-        /// <seealso cref="WriteToSequentialFileAsync(SingleFASTAFileData, string, CancellationToken)"/>
-        public static void WriteToSequentialFile(SingleFASTAFileData data, string path)
+        /// <seealso cref="WriteToInterleavedFile(MultiFASTAFileData, string, int)"/>
+        /// <seealso cref="WriteToSequentialFileAsync(MultiFASTAFileData, string, CancellationToken)"/>
+        public static void WriteToSequentialFile(MultiFASTAFileData data, string path)
         {
             if (data == null)
             {
@@ -334,9 +333,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// -or-
         /// <paramref name="path"/> specified a read-only file or directory.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedFileAsync(SingleFASTAFileData, string, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialFile(SingleFASTAFileData, string)"/>
-        public static async Task WriteToSequentialFileAsync(SingleFASTAFileData data, string path, CancellationToken cancellationToken = default)
+        /// <seealso cref="WriteToInterleavedFileAsync(MultiFASTAFileData, string, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialFile(MultiFASTAFileData, string)"/>
+        public static async Task WriteToSequentialFileAsync(MultiFASTAFileData data, string path, CancellationToken cancellationToken = default)
         {
             if (data == null)
             {
@@ -371,9 +370,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="stream"/> is closed.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStream(SingleFASTAFileData, Stream, int)"/>
-        /// <seealso cref="WriteToSequentialStreamAsync(SingleFASTAFileData, Stream, CancellationToken)"/>
-        public static void WriteToSequentialStream(SingleFASTAFileData data, Stream stream)
+        /// <seealso cref="WriteToInterleavedStream(MultiFASTAFileData, Stream, int)"/>
+        /// <seealso cref="WriteToSequentialStreamAsync(MultiFASTAFileData, Stream, CancellationToken)"/>
+        public static void WriteToSequentialStream(MultiFASTAFileData data, Stream stream)
         {
             if (data == null)
             {
@@ -412,9 +411,9 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <exception cref="OperationCanceledException">
         /// The ongoing operation was canceled.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStreamAsync(SingleFASTAFileData, Stream, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialStream(SingleFASTAFileData, Stream)"/>
-        public static async Task WriteToSequentialStreamAsync(SingleFASTAFileData data, Stream stream, CancellationToken cancellationToken = default)
+        /// <seealso cref="WriteToInterleavedStreamAsync(MultiFASTAFileData, Stream, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialStream(MultiFASTAFileData, Stream)"/>
+        public static async Task WriteToSequentialStreamAsync(MultiFASTAFileData data, Stream stream, CancellationToken cancellationToken = default)
         {
             if (data == null)
             {
