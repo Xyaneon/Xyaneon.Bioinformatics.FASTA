@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Xyaneon.Bioinformatics.FASTA.Extensions;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
 namespace Xyaneon.Bioinformatics.FASTA
@@ -10,6 +10,7 @@ namespace Xyaneon.Bioinformatics.FASTA
     /// <summary>
     /// Contains all of the data stored in a single FASTA file.
     /// </summary>
+    [Obsolete("Use SingleFASTAFileData in a collection instead.")]
     public sealed class MultiFASTAFileData
     {
         /// <summary>
@@ -19,7 +20,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sequence"/> is <see langword="null"/>.
         /// </exception>
-        public MultiFASTAFileData(SingleFASTAFileData sequence)
+        public MultiFASTAFileData(Sequence sequence)
         {
             if (sequence == null)
             {
@@ -36,20 +37,20 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sequences"/> is <see langword="null"/>.
         /// </exception>
-        public MultiFASTAFileData(IEnumerable<SingleFASTAFileData> sequences)
+        public MultiFASTAFileData(IEnumerable<Sequence> sequences)
         {
             if (sequences == null)
             {
                 throw new ArgumentNullException(nameof(sequences), "The collection of sequences cannot be null.");
             }
 
-            SingleFASTASequences = new List<SingleFASTAFileData>(sequences).AsReadOnly();
+            SingleFASTASequences = new List<Sequence>(sequences).AsReadOnly();
         }
 
         /// <summary>
         /// Gets a read-only list of all individual FASTA sequences stored in this file.
         /// </summary>
-        public IReadOnlyList<SingleFASTAFileData> SingleFASTASequences { get; }
+        public IReadOnlyList<Sequence> SingleFASTASequences { get; }
 
         /// <summary>
         /// Returns a value indicating whether this file only contains amino
@@ -140,7 +141,7 @@ namespace Xyaneon.Bioinformatics.FASTA
                 throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
             }
 
-            foreach (SingleFASTAFileData data in SingleFASTASequences)
+            foreach (Sequence data in SingleFASTASequences)
             {
                 foreach (string line in data.ToInterleavedLines(lineLength))
                 {
@@ -157,7 +158,7 @@ namespace Xyaneon.Bioinformatics.FASTA
         /// <seealso cref="ToInterleavedLines(int)"/>
         public IEnumerable<string> ToSequentialLines()
         {
-            foreach (SingleFASTAFileData data in SingleFASTASequences)
+            foreach (Sequence data in SingleFASTASequences)
             {
                 foreach (string line in data.ToSequentialLines())
                 {
@@ -176,7 +177,7 @@ namespace Xyaneon.Bioinformatics.FASTA
             try
             {
                 IEnumerable<string> nonBlankLines = lines.Where(line => !string.IsNullOrWhiteSpace(line));
-                IEnumerable<SingleFASTAFileData> sequences = ParseSequences(nonBlankLines.ToList());
+                IEnumerable<Sequence> sequences = ParseSequences(nonBlankLines.ToList());
 
                 return new MultiFASTAFileData(sequences);
             }
@@ -186,18 +187,18 @@ namespace Xyaneon.Bioinformatics.FASTA
             }
         }
 
-        private static IEnumerable<SingleFASTAFileData> ParseSequences(IEnumerable<string> lines)
+        private static IEnumerable<Sequence> ParseSequences(IEnumerable<string> lines)
         {
             IEnumerable<IEnumerable<string>> lineGroups = SplitByHeaderLines(lines);
             int sequenceNumber = 1;
 
             foreach (IEnumerable<string> lineGroup in lineGroups)
             {
-                SingleFASTAFileData singleFASTAFileData;
+                Sequence singleFASTAFileData;
 
                 try
                 {
-                    singleFASTAFileData = SingleFASTAFileData.Parse(lineGroup);
+                    singleFASTAFileData = Sequence.Parse(lineGroup);
                 }
                 catch (FormatException ex)
                 {

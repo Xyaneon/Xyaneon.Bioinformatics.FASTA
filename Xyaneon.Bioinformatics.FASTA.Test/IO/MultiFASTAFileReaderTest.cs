@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using Xyaneon.Bioinformatics.FASTA.IO;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 using Xyaneon.Bioinformatics.FASTA.Test.Extensions;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test.IO
@@ -28,7 +28,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
 
-            SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+            Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
             Assert.IsNotNull(sequence);
 
             Header header = sequence.Header;
@@ -53,7 +53,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -69,7 +69,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             }
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[1];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[1];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -101,7 +101,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
 
-            SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+            Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
             Assert.IsNotNull(sequence);
 
             Header header = sequence.Header;
@@ -126,7 +126,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -142,7 +142,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
             }
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[1];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[1];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;

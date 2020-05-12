@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Xyaneon.Bioinformatics.FASTA.Extensions;
 
-namespace Xyaneon.Bioinformatics.FASTA.Sequences
+namespace Xyaneon.Bioinformatics.FASTA.ActualSequences
 {
     internal static class SequenceUtility
     {

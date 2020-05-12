@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 using Xyaneon.Bioinformatics.FASTA.Utility;
 
 namespace Xyaneon.Bioinformatics.FASTA.IO

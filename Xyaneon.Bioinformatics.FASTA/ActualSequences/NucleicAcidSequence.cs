@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Xyaneon.Bioinformatics.FASTA.Extensions;
 
-namespace Xyaneon.Bioinformatics.FASTA.Sequences
+namespace Xyaneon.Bioinformatics.FASTA.ActualSequences
 {
     /// <summary>
-    /// Contains amino acid sequence data for a FASTA file sequence.
+    /// Contains nucleic acid sequence data for a FASTA file sequence.
     /// </summary>
-    /// <seealso cref="NucleicAcidSequence"/>
-    public readonly struct AminoAcidSequence : ISequence
+    /// <seealso cref="AminoAcidSequence"/>
+    public readonly struct NucleicAcidSequence: IActualSequence
     {
-        private static readonly Regex ValidCharactersRegex = new Regex(@"^[A-Z*-]*$", RegexOptions.IgnoreCase);
+        private static readonly Regex ValidCharactersRegex = new Regex(@"^[ACGTURYKMSWBDHVN-]*$", RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AminoAcidSequence"/> class.
+        /// Initializes a new instance of the <see cref="NucleicAcidSequence"/> class.
         /// </summary>
         /// <param name="characters">The characters in the sequence data.</param>
         /// <exception cref="ArgumentNullException">
@@ -23,18 +23,18 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         /// <exception cref="ArgumentException">
         /// <paramref name="characters"/> contains invalid characters.
         /// </exception>
-        private AminoAcidSequence(string characters)
+        private NucleicAcidSequence(string characters)
         {
             if (characters == null)
             {
-                throw new ArgumentNullException(nameof(characters), "The characters string for the amino acid sequence data cannot be null.");
+                throw new ArgumentNullException(nameof(characters), "The characters string for the nucleic acid sequence data cannot be null.");
             }
 
             string cleanedUpCharacters = characters.RemoveAllWhitespace();
 
             if (!IsValidSequence(cleanedUpCharacters))
             {
-                throw new ArgumentException("The supplied characters are not a valid amino acid sequence.", nameof(characters));
+                throw new ArgumentException("The supplied characters are not a valid nucleic acid sequence.", nameof(characters));
             }
 
             Characters = cleanedUpCharacters.ToUpperInvariant();
@@ -95,11 +95,11 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
 
         /// <summary>
         /// Converts a string representation of a FASTA file nucelic acid
-        /// sequence to its <see cref="AminoAcidSequence"/> equivalent.
+        /// sequence to its <see cref="NucleicAcidSequence"/> equivalent.
         /// </summary>
         /// <param name="s">A string containing the sequence to convert.</param>
         /// <returns>
-        /// A <see cref="AminoAcidSequence"/> value equivalent of the
+        /// A <see cref="NucleicAcidSequence"/> value equivalent of the
         /// sequence contained in <paramref name="s"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -108,33 +108,33 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         /// <exception cref="FormatException">
         /// <paramref name="s"/> is not in the correct format.
         /// </exception>
-        /// <seealso cref="TryParse(string, out AminoAcidSequence)"/>
-        public static AminoAcidSequence Parse(string s)
+        /// <seealso cref="TryParse(string, out NucleicAcidSequence)"/>
+        public static NucleicAcidSequence Parse(string s)
         {
             if (s == null)
             {
-                throw new ArgumentNullException(nameof(s), "The characters string for the amino acid sequence data cannot be null.");
+                throw new ArgumentNullException(nameof(s), "The characters string for the nucleic acid sequence data cannot be null.");
             }
 
             string cleanedUpCharacters = s.RemoveAllWhitespace();
 
             if (!IsValidSequence(cleanedUpCharacters))
             {
-                throw new FormatException("The supplied characters are not a valid amino acid sequence.");
+                throw new FormatException("The supplied characters are not a valid nucleic acid sequence.");
             }
 
-            return new AminoAcidSequence(cleanedUpCharacters.ToUpperInvariant());
+            return new NucleicAcidSequence(cleanedUpCharacters.ToUpperInvariant());
         }
 
         /// <summary>
         /// Converts a string representation of a FASTA file nucelic acid
-        /// sequence to its <see cref="AminoAcidSequence"/> equivalent.
+        /// sequence to its <see cref="NucleicAcidSequence"/> equivalent.
         /// A return value indicates whether the conversion succeeded.
         /// </summary>
         /// <param name="s">A string containing the sequence to convert.</param>
         /// <param name="result">
         /// When this method returns, contains the
-        /// <see cref="AminoAcidSequence"/> value equivalent of the
+        /// <see cref="NucleicAcidSequence"/> value equivalent of the
         /// sequence contained in <paramref name="s"/>, if the conversion
         /// succeeded, or an empty sequence if the conversion failed. The
         /// conversion fails if the <paramref name="s"/> parameter is
@@ -147,7 +147,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         /// successfully; otherwise, <see langword="false"/>.
         /// </returns>
         /// <seealso cref="Parse(string)"/>
-        public static bool TryParse(string s, out AminoAcidSequence result)
+        public static bool TryParse(string s, out NucleicAcidSequence result)
         {
             if (s == null)
             {
@@ -163,7 +163,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
                 return false;
             }
 
-            result = new AminoAcidSequence(cleanedUpCharacters.ToUpperInvariant());
+            result = new NucleicAcidSequence(cleanedUpCharacters.ToUpperInvariant());
             return true;
         }
 

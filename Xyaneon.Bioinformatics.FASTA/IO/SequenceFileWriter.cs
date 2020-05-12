@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Security;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.ActualSequences;
@@ -9,26 +11,25 @@ using Xyaneon.Bioinformatics.FASTA.Utility;
 namespace Xyaneon.Bioinformatics.FASTA.IO
 {
     /// <summary>
-    /// Writes single-sequence FASTA file data.
+    /// Provides functionality for writing FASTA sequences to a file.
     /// </summary>
-    /// <seealso cref="MultiFASTAFileWriter"/>
-    /// <seealso cref="Sequence"/>
-    /// <seealso cref="SingleFASTAFileReader"/>
-    public static class SingleFASTAFileWriter
+    /// <seealso cref="SequenceFileReader"/>
+    /// <seealso cref="SequenceStreamWriter"/>
+    public static class SequenceFileWriter
     {
-        private const string ArgumentNullException_Data = "The single-sequence FASTA data to write cannot be null.";
-        private const string ArgumentNullException_Path = "The path to the single-sequence FASTA file cannot be null.";
-        private const string ArgumentNullException_Stream = "The stream to write the single-sequence FASTA data to cannot be null.";
+        private const string ArgumentNullException_Sequence = "The FASTA data to write cannot be null.";
+        private const string ArgumentNullException_Sequences = "The collection of FASTA data to write cannot be null.";
+        private const string ArgumentNullException_Path = "The path to the FASTA file cannot be null.";
 
         /// <summary>
         /// Writes interleaved (multiline) data for a single FASTA sequence
         /// to the file at the given <paramref name="path"/>.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
+        /// <param name="sequence">The sequence data to write.</param>
         /// <param name="path">The file to write.</param>
         /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequence"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
@@ -69,11 +70,11 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// </exception>
         /// <seealso cref="WriteToInterleavedFileAsync(Sequence, string, int, CancellationToken)"/>
         /// <seealso cref="WriteToSequentialFile(Sequence, string)"/>
-        public static void WriteToInterleavedFile(Sequence data, string path, int lineLength = Constants.DefaultLineLength)
+        public static void WriteToInterleavedFile(Sequence sequence, string path, int lineLength = Constants.DefaultLineLength)
         {
-            if (data == null)
+            if (sequence == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequence), ArgumentNullException_Sequence);
             }
 
             if (path == null)
@@ -86,20 +87,20 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
                 throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
             }
 
-            File.WriteAllLines(path, data.ToInterleavedLines(lineLength));
+            File.WriteAllLines(path, sequence.ToInterleavedLines(lineLength));
         }
 
         /// <summary>
         /// Writes interleaved (multiline) data for a single FASTA sequence
         /// to the file at the given <paramref name="path"/> asynchronously.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
+        /// <param name="sequence">The sequence data to write.</param>
         /// <param name="path">The file to write.</param>
         /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
         /// <returns>A <see cref="Task"/> representing the ongoing operation.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequence"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
@@ -129,11 +130,11 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// </exception>
         /// <seealso cref="WriteToInterleavedFile(Sequence, string, int)"/>
         /// <seealso cref="WriteToSequentialFileAsync(Sequence, string, CancellationToken)"/>
-        public static async Task WriteToInterleavedFileAsync(Sequence data, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
+        public static async Task WriteToInterleavedFileAsync(Sequence sequence, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
-            if (data == null)
+            if (sequence == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequence), ArgumentNullException_Sequence);
             }
 
             if (path == null)
@@ -151,61 +152,89 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
                 throw new OperationCanceledException("Writing single interleaved FASTA file data stream async canceled before write.", cancellationToken);
             }
 
-            await FileUtility.WriteAllLinesAsync(path, data.ToInterleavedLines(lineLength), cancellationToken);
+            await FileUtility.WriteAllLinesAsync(path, sequence.ToInterleavedLines(lineLength), cancellationToken);
         }
 
         /// <summary>
-        /// Writes interleaved (multiline) data for a single FASTA sequence
-        /// to the given <paramref name="stream"/>.
+        /// Writes interleaved (multiline) data for multiple FASTA sequences
+        /// to the file at the given <paramref name="path"/>.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
-        /// <param name="stream">The stream to write to.</param>
+        /// <param name="sequences">The collection of sequence data to write.</param>
+        /// <param name="path">The file to write.</param>
         /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequences"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="lineLength"/> is less than one.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="stream"/> is not writable.
+        /// <exception cref="DirectoryNotFoundException">
+        /// <paramref name="path"/> is invalid (for example, it is on an
+        /// unmapped drive).
         /// </exception>
         /// <exception cref="IOException">
-        /// An I/O error occurs.
+        /// An I/O error occurred while opening the file.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// <paramref name="stream"/> is closed.
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStreamAsync(Sequence, Stream, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialStream(Sequence, Stream)"/>
-        public static void WriteToInterleavedStream(Sequence data, Stream stream, int lineLength = Constants.DefaultLineLength)
+        /// <exception cref="PathTooLongException">
+        /// <paramref name="path"/> exceeds the system-defined maximum length.
+        /// </exception>
+        /// <exception cref="SecurityException">
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specifies a file that is read-only.
+        /// -or-
+        /// <paramref name="path"/> specified a file that is hidden.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> is a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFileAsync(IEnumerable{Sequence}, string, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialFile(IEnumerable{Sequence}, string)"/>
+        public static void WriteToInterleavedFile(IEnumerable<Sequence> sequences, string path, int lineLength = Constants.DefaultLineLength)
         {
-            if (data == null)
+            if (sequences == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequences), ArgumentNullException_Sequences);
             }
 
-            if (stream == null)
+            if (path == null)
             {
-                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            StreamUtility.WriteAllLines(stream, data.ToInterleavedLines(lineLength));
+            if (lineLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
+            }
+
+            File.WriteAllLines(path, sequences.SelectMany(sequence => sequence.ToInterleavedLines(lineLength)));
         }
 
         /// <summary>
-        /// Writes interleaved (multiline) data for a single FASTA sequence
-        /// to the given <paramref name="stream"/> asynchronously.
+        /// Writes interleaved (multiline) data for multiple FASTA sequences
+        /// to the file at the given <paramref name="path"/> asynchronously.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
-        /// <param name="stream">The stream to write to.</param>
+        /// <param name="sequences">The collection of sequence data to write.</param>
+        /// <param name="path">The file to write.</param>
         /// <param name="lineLength">An optional maximum length for each line in the sequence. If omitted, this defaults to <see cref="Constants.DefaultLineLength"/>.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
         /// <returns>A <see cref="Task"/> representing the ongoing operation.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequences"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
@@ -213,42 +242,61 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <paramref name="lineLength"/> is less than one.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="stream"/> is not writable.
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
         /// </exception>
-        /// <exception cref="IOException">
-        /// An I/O error occurs.
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified path is invalid, (for example, it is on an unmapped
+        /// drive).
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// <paramref name="stream"/> is closed.
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined
+        /// maximum length.
         /// </exception>
-        /// <exception cref="OperationCanceledException">
-        /// The ongoing operation was canceled.
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStream(Sequence, Stream, int)"/>
-        /// <seealso cref="WriteToSequentialStreamAsync(Sequence, Stream, CancellationToken)"/>
-        public static async Task WriteToInterleavedStreamAsync(Sequence data, Stream stream, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// -or-
+        /// <paramref name="path"/> specified a read-only file or directory.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFile(IEnumerable{Sequence}, string, int)"/>
+        /// <seealso cref="WriteToSequentialFileAsync(IEnumerable{Sequence}, string, CancellationToken)"/>
+        public static async Task WriteToInterleavedFileAsync(IEnumerable<Sequence> sequences, string path, int lineLength = Constants.DefaultLineLength, CancellationToken cancellationToken = default)
         {
-            if (data == null)
+            if (sequences == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequences), ArgumentNullException_Sequences);
             }
 
-            if (stream == null)
+            if (path == null)
             {
-                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            await StreamUtility.WriteAllLinesAsync(stream, data.ToInterleavedLines(lineLength), cancellationToken);
+            if (lineLength < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lineLength), lineLength, SequenceUtility.ArgumentOutOfRangeException_LineLengthLessThanOne);
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException("Writing multiple interleaved FASTA file data stream async canceled before write.", cancellationToken);
+            }
+
+            await FileUtility.WriteAllLinesAsync(path, sequences.SelectMany(sequence => sequence.ToInterleavedLines(lineLength)), cancellationToken);
         }
 
         /// <summary>
         /// Writes sequential (single-line) data for a single FASTA sequence
         /// to the file at the given <paramref name="path"/>.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
+        /// <param name="sequence">The sequence data to write.</param>
         /// <param name="path">The file to write.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequence"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
@@ -286,11 +334,11 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// </exception>
         /// <seealso cref="WriteToInterleavedFile(Sequence, string, int)"/>
         /// <seealso cref="WriteToSequentialFileAsync(Sequence, string, CancellationToken)"/>
-        public static void WriteToSequentialFile(Sequence data, string path)
+        public static void WriteToSequentialFile(Sequence sequence, string path)
         {
-            if (data == null)
+            if (sequence == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequence), ArgumentNullException_Sequence);
             }
 
             if (path == null)
@@ -298,18 +346,18 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
                 throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            File.WriteAllLines(path, data.ToSequentialLines());
+            File.WriteAllLines(path, sequence.ToSequentialLines());
         }
 
         /// <summary>
         /// Writes sequential (single-line) data for a single FASTA sequence
         /// to the file at the given <paramref name="path"/> asynchronously.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
+        /// <param name="sequence">The sequence data to write.</param>
         /// <param name="path">The file to write.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequence"/> is <see langword="null"/>.
         /// -or-
         /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
@@ -336,11 +384,11 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// </exception>
         /// <seealso cref="WriteToInterleavedFileAsync(Sequence, string, int, CancellationToken)"/>
         /// <seealso cref="WriteToSequentialFile(Sequence, string)"/>
-        public static async Task WriteToSequentialFileAsync(Sequence data, string path, CancellationToken cancellationToken = default)
+        public static async Task WriteToSequentialFileAsync(Sequence sequence, string path, CancellationToken cancellationToken = default)
         {
-            if (data == null)
+            if (sequence == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequence), ArgumentNullException_Sequence);
             }
 
             if (path == null)
@@ -348,85 +396,117 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
                 throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            await FileUtility.WriteAllLinesAsync(path, data.ToSequentialLines(), cancellationToken);
+            await FileUtility.WriteAllLinesAsync(path, sequence.ToSequentialLines(), cancellationToken);
         }
 
         /// <summary>
-        /// Writes sequential (single-line) data for a single FASTA sequence
-        /// to the given <paramref name="stream"/>.
+        /// Writes sequential (single-line) data for multiple FASTA sequences
+        /// to the file at the given <paramref name="path"/>.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
-        /// <param name="stream">The stream to write to.</param>
+        /// <param name="sequences">The collection of sequence data to write.</param>
+        /// <param name="path">The file to write.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequences"/> is <see langword="null"/>.
         /// -or-
-        /// <paramref name="stream"/> is <see langword="null"/>.
+        /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="stream"/> is not writable.
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// <paramref name="path"/> is invalid (for example, it is on an
+        /// unmapped drive).
         /// </exception>
         /// <exception cref="IOException">
-        /// An I/O error occurs.
+        /// An I/O error occurred while opening the file.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// <paramref name="stream"/> is closed.
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStream(Sequence, Stream, int)"/>
-        /// <seealso cref="WriteToSequentialStreamAsync(Sequence, Stream, CancellationToken)"/>
-        public static void WriteToSequentialStream(Sequence data, Stream stream)
+        /// <exception cref="PathTooLongException">
+        /// <paramref name="path"/> exceeds the system-defined maximum length.
+        /// </exception>
+        /// <exception cref="SecurityException">
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specifies a file that is read-only.
+        /// -or-
+        /// <paramref name="path"/> specified a file that is hidden.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> is a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFile(IEnumerable{Sequence}, string, int)"/>
+        /// <seealso cref="WriteToSequentialFileAsync(IEnumerable{Sequence}, string, CancellationToken)"/>
+        public static void WriteToSequentialFile(IEnumerable<Sequence> sequences, string path)
         {
-            if (data == null)
+            if (sequences == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequences), ArgumentNullException_Sequences);
             }
 
-            if (stream == null)
+            if (path == null)
             {
-                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            StreamUtility.WriteAllLines(stream, data.ToSequentialLines());
+            File.WriteAllLines(path, sequences.SelectMany(sequence => sequence.ToSequentialLines()));
         }
 
         /// <summary>
-        /// Writes sequential (single-line) data for a single FASTA sequence
-        /// to the given <paramref name="stream"/> asynchronously.
+        /// Writes sequential (single-line) data for multiple FASTA sequences
+        /// to the file at the given <paramref name="path"/> asynchronously.
         /// </summary>
-        /// <param name="data">The sequence data to write.</param>
-        /// <param name="stream">The stream to write to.</param>
+        /// <param name="sequences">The collection of sequence data to write.</param>
+        /// <param name="path">The file to write.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which can be used to cancel the ongoing operation.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="data"/> is <see langword="null"/>.
+        /// <paramref name="sequences"/> is <see langword="null"/>.
         /// -or-
-        /// <paramref name="stream"/> is <see langword="null"/>.
+        /// <paramref name="path"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="stream"/> is not writable.
+        /// <paramref name="path"/> is a zero-length string, contains only
+        /// white space, or contains one or more invalid characters defined
+        /// by the <see cref="Path.GetInvalidPathChars"/> method.
         /// </exception>
-        /// <exception cref="IOException">
-        /// An I/O error occurs.
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified path is invalid, (for example, it is on an unmapped
+        /// drive).
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// <paramref name="stream"/> is closed.
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined
+        /// maximum length.
         /// </exception>
-        /// <exception cref="OperationCanceledException">
-        /// The ongoing operation was canceled.
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="path"/> is in an invalid format.
         /// </exception>
-        /// <seealso cref="WriteToInterleavedStreamAsync(Sequence, Stream, int, CancellationToken)"/>
-        /// <seealso cref="WriteToSequentialStream(Sequence, Stream)"/>
-        public static async Task WriteToSequentialStreamAsync(Sequence data, Stream stream, CancellationToken cancellationToken = default)
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// -or-
+        /// <paramref name="path"/> specified a read-only file or directory.
+        /// </exception>
+        /// <seealso cref="WriteToInterleavedFileAsync(IEnumerable{Sequence}, string, int, CancellationToken)"/>
+        /// <seealso cref="WriteToSequentialFile(IEnumerable{Sequence}, string)"/>
+        public static async Task WriteToSequentialFileAsync(IEnumerable<Sequence> sequences, string path, CancellationToken cancellationToken = default)
         {
-            if (data == null)
+            if (sequences == null)
             {
-                throw new ArgumentNullException(nameof(data), ArgumentNullException_Data);
+                throw new ArgumentNullException(nameof(sequences), ArgumentNullException_Sequences);
             }
 
-            if (stream == null)
+            if (path == null)
             {
-                throw new ArgumentNullException(nameof(stream), ArgumentNullException_Stream);
+                throw new ArgumentNullException(nameof(path), ArgumentNullException_Path);
             }
 
-            await StreamUtility.WriteAllLinesAsync(stream, data.ToSequentialLines(), cancellationToken);
+            await FileUtility.WriteAllLinesAsync(path, sequences.SelectMany(sequence => sequence.ToSequentialLines()), cancellationToken);
         }
     }
 }

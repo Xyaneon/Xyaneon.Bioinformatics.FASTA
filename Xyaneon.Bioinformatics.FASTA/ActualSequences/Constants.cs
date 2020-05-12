@@ -1,4 +1,4 @@
-﻿namespace Xyaneon.Bioinformatics.FASTA.Sequences
+﻿namespace Xyaneon.Bioinformatics.FASTA.ActualSequences
 {
     /// <summary>
     /// Provides constants relating to FASTA sequences.

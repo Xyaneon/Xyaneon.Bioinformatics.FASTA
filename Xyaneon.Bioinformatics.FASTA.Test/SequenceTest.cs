@@ -1,20 +1,20 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using System.Linq;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test
 {
     [TestClass]
-    public class SingleFASTAFileDataTest
+    public class SequenceTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_ShouldRejectNullHeader()
         {
-            _ = new SingleFASTAFileData(null, NucleicAcidSequence.Parse("ATCG"));
+            _ = new Sequence(null, NucleicAcidSequence.Parse("ATCG"));
         }
 
         [TestMethod]
@@ -23,28 +23,28 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            _ = new SingleFASTAFileData(header, null);
+            _ = new Sequence(header, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Parse_ShouldRejectNullString()
         {
-            _ = SingleFASTAFileData.Parse((string)null);
+            _ = Sequence.Parse((string)null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Parse_ShouldRejectNullLinesCollection()
         {
-            _ = SingleFASTAFileData.Parse((IEnumerable<string>)null);
+            _ = Sequence.Parse((IEnumerable<string>)null);
         }
 
         [TestMethod]
         public void Parse_ShouldProduceExpectedOutputForString()
         {
             string inputString = ">lcl|123" + Environment.NewLine + "ATCG" + Environment.NewLine + "AAAA";
-            SingleFASTAFileData sequence = SingleFASTAFileData.Parse(inputString);
+            Sequence sequence = Sequence.Parse(inputString);
 
             Assert.IsNotNull(sequence);
 
@@ -65,7 +65,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         public void Parse_ShouldRejectMissingHeaderForString()
         {
             string inputString = "ATCG" + Environment.NewLine + "AAAA";
-            _ = SingleFASTAFileData.Parse(inputString);
+            _ = Sequence.Parse(inputString);
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         public void Parse_ShouldRejectMissingSequenceForString()
         {
             string inputString = ">lcl|123";
-            _ = SingleFASTAFileData.Parse(inputString);
+            _ = Sequence.Parse(inputString);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
                 "ATCG",
                 "AAAA"
             };
-            SingleFASTAFileData sequence = SingleFASTAFileData.Parse(inputLines);
+            Sequence sequence = Sequence.Parse(inputLines);
 
             Assert.IsNotNull(sequence);
 
@@ -108,7 +108,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
                 "ATCG",
                 "AAAA"
             };
-            _ = SingleFASTAFileData.Parse(inputLines);
+            _ = Sequence.Parse(inputLines);
         }
 
         [TestMethod]
@@ -118,7 +118,14 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             IEnumerable<string> inputLines = new string[] {
                 ">lcl|123"
             };
-            _ = SingleFASTAFileData.Parse(inputLines);
+            _ = Sequence.Parse(inputLines);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ParseMultiple_ShouldRejectNullLinesCollection()
+        {
+            _ = Sequence.ParseMultiple((IEnumerable<string>)null);
         }
 
         [TestMethod]
@@ -130,8 +137,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
             Identifier identifier = new LocalIdentifier("123");
             Header header = new Header(identifier);
-            ISequence sequence = AminoAcidSequence.Parse(inputSequence);
-            var singleFASTAFileData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = AminoAcidSequence.Parse(inputSequence);
+            var singleFASTAFileData = new Sequence(header, sequence);
 
             _ = singleFASTAFileData.ToInterleavedLines(-1).ToList();
         }
@@ -145,8 +152,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
             Identifier identifier = new LocalIdentifier("123");
             Header header = new Header(identifier);
-            ISequence sequence = AminoAcidSequence.Parse(inputSequence);
-            var singleFASTAFileData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = AminoAcidSequence.Parse(inputSequence);
+            var singleFASTAFileData = new Sequence(header, sequence);
 
             _ = singleFASTAFileData.ToInterleavedLines(0).ToList();
         }
@@ -165,8 +172,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
             Identifier identifier = new LocalIdentifier("123");
             Header header = new Header(identifier);
-            ISequence sequence = AminoAcidSequence.Parse(inputSequence);
-            var singleFASTAFileData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = AminoAcidSequence.Parse(inputSequence);
+            var singleFASTAFileData = new Sequence(header, sequence);
 
             IEnumerable<string> actualOutputLines = singleFASTAFileData.ToInterleavedLines();
 
@@ -201,8 +208,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
             Identifier identifier = new LocalIdentifier("123");
             Header header = new Header(identifier);
-            ISequence sequence = AminoAcidSequence.Parse(inputSequence);
-            var singleFASTAFileData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = AminoAcidSequence.Parse(inputSequence);
+            var singleFASTAFileData = new Sequence(header, sequence);
 
             IEnumerable<string> actualOutputLines = singleFASTAFileData.ToInterleavedLines(8);
 
@@ -222,8 +229,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
 
             Identifier identifier = new LocalIdentifier("123");
             Header header = new Header(identifier);
-            ISequence sequence = AminoAcidSequence.Parse(inputSequence);
-            var singleFASTAFileData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = AminoAcidSequence.Parse(inputSequence);
+            var singleFASTAFileData = new Sequence(header, sequence);
 
             IEnumerable<string> actualOutputLines = singleFASTAFileData.ToSequentialLines();
 

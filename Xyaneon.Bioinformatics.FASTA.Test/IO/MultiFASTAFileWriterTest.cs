@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using Xyaneon.Bioinformatics.FASTA.IO;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test.IO
 {
@@ -26,8 +26,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToInterleavedFile(multiFASTAData, null);
@@ -39,8 +39,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToInterleavedFile(multiFASTAData, Path, 0);
@@ -52,8 +52,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToInterleavedFile(multiFASTAData, Path, -1);
@@ -74,8 +74,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToInterleavedStream(multiFASTAData, null);
@@ -87,8 +87,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var stream = new MemoryStream(new byte[] { }, true);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
@@ -101,8 +101,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var stream = new MemoryStream(new byte[] { }, true);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
@@ -124,8 +124,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToInterleavedStreamAsync(multiFASTAData, null);
@@ -137,8 +137,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var stream = new MemoryStream(new byte[] { }, true);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
@@ -151,8 +151,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var stream = new MemoryStream(new byte[] { }, true);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
@@ -172,8 +172,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToInterleavedFileAsync(multiFASTAData, null);
@@ -185,8 +185,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToInterleavedFileAsync(multiFASTAData, Path, 0);
@@ -198,8 +198,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToInterleavedFileAsync(multiFASTAData, Path, -1);
@@ -218,8 +218,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToSequentialFile(multiFASTAData, null);
@@ -240,8 +240,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             MultiFASTAFileWriter.WriteToSequentialStream(multiFASTAData, null);
@@ -260,8 +260,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToSequentialFileAsync(multiFASTAData, null);
@@ -282,8 +282,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             var identifier = new LocalIdentifier("value");
             var header = new Header(identifier);
-            ISequence sequence = NucleicAcidSequence.Parse("ATCG");
-            var singleFASTAData = new SingleFASTAFileData(header, sequence);
+            IActualSequence sequence = NucleicAcidSequence.Parse("ATCG");
+            var singleFASTAData = new Sequence(header, sequence);
             var multiFASTAData = new MultiFASTAFileData(singleFASTAData);
 
             await MultiFASTAFileWriter.WriteToSequentialStreamAsync(multiFASTAData, null);

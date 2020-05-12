@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
 using Xyaneon.Bioinformatics.FASTA.IO;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 using Xyaneon.Bioinformatics.FASTA.Test.Extensions;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test.IO
@@ -40,7 +40,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             using Stream stream = ValidInputString.ToStream();
 
-            SingleFASTAFileData sequence = SingleFASTAFileReader.ReadFromStream(stream);
+            Sequence sequence = SingleFASTAFileReader.ReadFromStream(stream);
 
             Assert.IsNotNull(sequence);
 
@@ -68,7 +68,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         {
             using Stream stream = ValidInputString.ToStream();
 
-            SingleFASTAFileData sequence = await SingleFASTAFileReader.ReadFromStreamAsync(stream);
+            Sequence sequence = await SingleFASTAFileReader.ReadFromStreamAsync(stream);
 
             Assert.IsNotNull(sequence);
 

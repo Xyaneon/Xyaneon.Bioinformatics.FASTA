@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using Xyaneon.Bioinformatics.FASTA.Identifiers;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 
 namespace Xyaneon.Bioinformatics.FASTA.Test
 {
@@ -16,22 +16,22 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_ShouldRejectNullSequence()
         {
-            _ = new MultiFASTAFileData((SingleFASTAFileData)null);
+            _ = new MultiFASTAFileData((Sequence)null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_ShouldRejectNullSequencesCollection()
         {
-            _ = new MultiFASTAFileData((IEnumerable<SingleFASTAFileData>)null);
+            _ = new MultiFASTAFileData((IEnumerable<Sequence>)null);
         }
 
         [TestMethod]
         public void ContainsOnlyAminoAcidSequences_ShouldReturnTrueIfAllSequencesAreForAminoAcids()
         {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("EFGH"))
+            var sequences = new Sequence[] {
+                new Sequence(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
+                new Sequence(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("EFGH"))
             };
             var fileData = new MultiFASTAFileData(sequences);
 
@@ -41,9 +41,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         [TestMethod]
         public void ContainsOnlyAminoAcidSequences_ShouldReturnFalseIfSomeSequencesAreNotForAminoAcids()
         {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("ATGC"))
+            var sequences = new Sequence[] {
+                new Sequence(new Header(new Description(Description1Text)), AminoAcidSequence.Parse("ABCD")),
+                new Sequence(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("ATGC"))
             };
             var fileData = new MultiFASTAFileData(sequences);
 
@@ -53,9 +53,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         [TestMethod]
         public void ContainsOnlyNucleicAcidSequences_ShouldReturnTrueIfAllSequencesAreForNucleicAcids()
         {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("GCTA"))
+            var sequences = new Sequence[] {
+                new Sequence(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
+                new Sequence(new Header(new Description(Description2Text)), NucleicAcidSequence.Parse("GCTA"))
             };
             var fileData = new MultiFASTAFileData(sequences);
 
@@ -65,9 +65,9 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
         [TestMethod]
         public void ContainsOnlyNucleicAcidSequences_ShouldReturnFalseIfSomeSequencesAreNotForNucleicAcids()
         {
-            var sequences = new SingleFASTAFileData[] {
-                new SingleFASTAFileData(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
-                new SingleFASTAFileData(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("ABCD"))
+            var sequences = new Sequence[] {
+                new Sequence(new Header(new Description(Description1Text)), NucleicAcidSequence.Parse("ATGC")),
+                new Sequence(new Header(new Description(Description2Text)), AminoAcidSequence.Parse("ABCD"))
             };
             var fileData = new MultiFASTAFileData(sequences);
 
@@ -90,7 +90,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
 
-            SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+            Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
             Assert.IsNotNull(sequence);
 
             Header header = sequence.Header;
@@ -115,7 +115,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -131,7 +131,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             }
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[1];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[1];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -163,7 +163,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.IsNotNull(multiFASTAFileData);
             Assert.AreEqual(1, multiFASTAFileData.SingleFASTASequences.Count);
 
-            SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+            Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
             Assert.IsNotNull(sequence);
 
             Header header = sequence.Header;
@@ -188,7 +188,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             Assert.AreEqual(2, multiFASTAFileData.SingleFASTASequences.Count);
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[0];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[0];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
@@ -204,7 +204,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test
             }
 
             {
-                SingleFASTAFileData sequence = multiFASTAFileData.SingleFASTASequences[1];
+                Sequence sequence = multiFASTAFileData.SingleFASTASequences[1];
                 Assert.IsNotNull(sequence);
 
                 Header header = sequence.Header;
