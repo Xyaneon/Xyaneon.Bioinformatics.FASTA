@@ -61,7 +61,7 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// -or-
         /// The caller does not have the required permission.
         /// </exception>
-        public static Sequence ReadFromFile(string path)
+        public static Sequence ReadSingleFromFile(string path)
         {
             if (path == null)
             {
@@ -117,7 +117,7 @@ namespace Xyaneon.Bioinformatics.FASTA.IO
         /// <exception cref="NotSupportedException">
         /// <paramref name="path"/> is in an invalid format.
         /// </exception>
-        public static async Task<Sequence> ReadFromFileAsync(string path, CancellationToken cancellationToken = default)
+        public static async Task<Sequence> ReadSingleFromFileAsync(string path, CancellationToken cancellationToken = default)
         {
             if (path == null)
             {
