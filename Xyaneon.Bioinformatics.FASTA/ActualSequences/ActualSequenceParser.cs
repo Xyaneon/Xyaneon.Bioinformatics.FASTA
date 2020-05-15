@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Xyaneon.Bioinformatics.FASTA.Sequences
+namespace Xyaneon.Bioinformatics.FASTA.ActualSequences
 {
     /// <summary>
     /// Provides functionality for parsing FASTA sequence data.
     /// </summary>
-    public static class SequenceParser
+    public static class ActualSequenceParser
     {
+        private const string ArgumentNullException_Lines = "The collection of lines to parse cannot be null.";
+
         /// <summary>
-        /// Parses the provided FASTA sequence data.
+        /// Parses the provided FASTA sequence data for a single sequence.
         /// </summary>
         /// <param name="data">The string to parse.</param>
         /// <returns>
-        /// A new <see cref="ISequence"/> object parsed from the provided
+        /// A new <see cref="IActualSequence"/> object parsed from the provided
         /// data string. Depending on the data passed in, this could either be
         /// an <see cref="AminoAcidSequence"/> object or a
         /// <see cref="NucleicAcidSequence"/> object. If the sequence is
@@ -27,7 +29,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         /// -or-
         /// <paramref name="data"/> is in an incorrect format.
         /// </exception>
-        public static ISequence Parse(string data)
+        public static IActualSequence Parse(string data)
         {
             if (data == null)
             {
@@ -54,11 +56,11 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         }
 
         /// <summary>
-        /// Parses the provided FASTA sequence data.
+        /// Parses the provided FASTA sequence data for a single sequence.
         /// </summary>
         /// <param name="lines">The collection of lines to parse.</param>
         /// <returns>
-        /// A new <see cref="ISequence"/> object parsed from the provided
+        /// A new <see cref="IActualSequence"/> object parsed from the provided
         /// data string. Depending on the data passed in, this could either be
         /// an <see cref="AminoAcidSequence"/> object or a
         /// <see cref="NucleicAcidSequence"/> object. If the sequence is
@@ -72,11 +74,11 @@ namespace Xyaneon.Bioinformatics.FASTA.Sequences
         /// -or-
         /// <paramref name="lines"/> is in an incorrect format.
         /// </exception>
-        public static ISequence Parse(IEnumerable<string> lines)
+        public static IActualSequence Parse(IEnumerable<string> lines)
         {
             if (lines == null)
             {
-                throw new ArgumentNullException(nameof(lines), "The collection of sequence data lines to parse cannot be null.");
+                throw new ArgumentNullException(nameof(lines), ArgumentNullException_Lines);
             }
 
             try

@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 
-namespace Xyaneon.Bioinformatics.FASTA.Test.Data
+namespace Xyaneon.Bioinformatics.FASTA.Test.ActualSequences
 {
     [TestClass]
     public class AminoAcidSequenceTest

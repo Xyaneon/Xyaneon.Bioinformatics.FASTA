@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Xyaneon.Bioinformatics.FASTA.Sequences
+namespace Xyaneon.Bioinformatics.FASTA.ActualSequences
 {
     /// <summary>
-    /// Interface for objects representing FASTA sequence data.
+    /// Interface for objects representing the actual FASTA sequence data.
     /// </summary>
-    public interface ISequence
+    public interface IActualSequence
     {
         /// <summary>
         /// Gets a string containing all characters in the sequence data.

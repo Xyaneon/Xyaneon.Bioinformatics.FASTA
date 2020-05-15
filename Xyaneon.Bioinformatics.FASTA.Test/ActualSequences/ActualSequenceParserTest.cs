@@ -1,39 +1,39 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using Xyaneon.Bioinformatics.FASTA.Sequences;
+using Xyaneon.Bioinformatics.FASTA.ActualSequences;
 
-namespace Xyaneon.Bioinformatics.FASTA.Test.Data
+namespace Xyaneon.Bioinformatics.FASTA.Test.ActualSequences
 {
     [TestClass]
-    public class SequenceParserTest
+    public class ActualSequenceParserTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Parse_ShouldRejectNullText()
         {
-            _ = SequenceParser.Parse((string)null);
+            _ = ActualSequenceParser.Parse((string)null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Parse_ShouldRejectNullLinesCollection()
         {
-            _ = SequenceParser.Parse((IEnumerable<string>)null);
+            _ = ActualSequenceParser.Parse((IEnumerable<string>)null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
         public void Parse_ShouldRejectAllWhitespaceText()
         {
-            _ = SequenceParser.Parse("     ");
+            _ = ActualSequenceParser.Parse("     ");
         }
 
         [TestMethod]
         public void Parse_ShouldParseAminoAcidSequence()
         {
             const string aminoAcidSequenceString = "ABCZ";
-            ISequence sequenceData = SequenceParser.Parse(aminoAcidSequenceString);
+            IActualSequence sequenceData = ActualSequenceParser.Parse(aminoAcidSequenceString);
 
             Assert.IsNotNull(sequenceData);
             Assert.IsInstanceOfType(sequenceData, typeof(AminoAcidSequence));
@@ -45,7 +45,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         public void Parse_ShouldParseNucleicAcidSequence()
         {
             const string nucleicAcidSequenceString = "ATCG";
-            ISequence sequenceData = SequenceParser.Parse(nucleicAcidSequenceString);
+            IActualSequence sequenceData = ActualSequenceParser.Parse(nucleicAcidSequenceString);
 
             Assert.IsNotNull(sequenceData);
             Assert.IsInstanceOfType(sequenceData, typeof(NucleicAcidSequence));
@@ -57,7 +57,7 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.Data
         public void Parse_ShouldAssumeParsingAmbiguousSequenceAsNucleicAcidSequence()
         {
             const string nucleicAcidSequenceString = "ABCD";
-            ISequence sequenceData = SequenceParser.Parse(nucleicAcidSequenceString);
+            IActualSequence sequenceData = ActualSequenceParser.Parse(nucleicAcidSequenceString);
 
             Assert.IsNotNull(sequenceData);
             Assert.IsInstanceOfType(sequenceData, typeof(NucleicAcidSequence));
