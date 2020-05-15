@@ -42,7 +42,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         }
 
         [TestMethod]
-        public void ReadSingleFromStream_ShouldProduceExpectedOutputForTwoSequences()
+        [ExpectedException(typeof(FormatException))]
+        public void ReadSingleFromStream_ShouldThrowForStreamWithTwoSequences()
         {
             Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC").ToStream();
             Sequence sequence = SequenceStreamReader.ReadSingleFromStream(stream);
@@ -89,7 +90,8 @@ namespace Xyaneon.Bioinformatics.FASTA.Test.IO
         }
 
         [TestMethod]
-        public async Task ReadSingleFromStreamAsync_ShouldProduceExpectedOutputForTwoSequences()
+        [ExpectedException(typeof(FormatException))]
+        public async Task ReadSingleFromStreamAsync_ShouldThrowForStreamWithTwoSequences()
         {
             Stream stream = string.Join(Environment.NewLine, ">lcl|123", "ATCG", "AAAA", "", ">lcl|456", "TTTT", "CCCC").ToStream();
             Sequence sequence = await SequenceStreamReader.ReadSingleFromStreamAsync(stream);
