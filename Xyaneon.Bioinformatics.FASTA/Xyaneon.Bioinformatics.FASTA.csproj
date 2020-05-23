@@ -2,6 +2,33 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Xyaneon.Bioinformatics.FASTA</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Christopher Kyle Horton</Authors>
+    <Company>Christopher Kyle Horton</Company>
+    <PackageTags>netstandard;bioinformatics;sequence;ncbi;nucleic;amino;protein;dna;rna;file;fasta</PackageTags>
+    <Description>
+      A .NET Standard library for working with FASTA genetic sequence files.
+    </Description>
+    <Copyright>Copyright © Christopher Kyle Horton 2020</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://raw.githubusercontent.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/master/Xyaneon.Bioinformatics.FASTA/images/icon.png</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>
+      ## 0.1.0 - 2020-05-23
+      ### Added
+      - Initial release.
+    </PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>
