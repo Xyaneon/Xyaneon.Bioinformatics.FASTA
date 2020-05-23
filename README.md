@@ -1,6 +1,7 @@
 # Xyaneon.Bioinformatics.FASTA
 
 [![License](https://img.shields.io/github/license/Xyaneon/Xyaneon.Bioinformatics.FASTA)][License]
+[![NuGet](https://img.shields.io/nuget/v/Xyaneon.Bioinformatics.FASTA.svg?style=flat)][NuGet package]
 [![Build Status](https://travis-ci.com/Xyaneon/Xyaneon.Bioinformatics.FASTA.svg?branch=master)][Travis CI]
 
 ![Package Icon][icon]
