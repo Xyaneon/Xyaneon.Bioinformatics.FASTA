@@ -10,5 +10,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/Xyaneon/Xyaneon.ComputerScience.GraphTheory/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Xyaneon/Xyaneon.Games.Cards/compare/71c71fc0c32c364a4d7c501b2b3b5230ced34f06...v0.1.0
+[Unreleased]: https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/compare/71c71fc0c32c364a4d7c501b2b3b5230ced34f06...v0.1.0
