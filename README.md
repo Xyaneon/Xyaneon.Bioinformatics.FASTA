@@ -138,6 +138,6 @@ This library is free and open-source software provided under the MIT license.
 Please see the [LICENSE.txt][License] file for details.
 
 [icon]: https://raw.githubusercontent.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/main/Xyaneon.Bioinformatics.FASTA/images/icon.png
-[License]: https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/blob/master/LICENSE.txt
+[License]: https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/blob/main/LICENSE.txt
 [NuGet package]: https://www.nuget.org/packages/Xyaneon.Bioinformatics.FASTA/
 [Travis CI]: https://travis-ci.com/Xyaneon/Xyaneon.Bioinformatics.FASTA
