@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/github/license/Xyaneon/Xyaneon.Bioinformatics.FASTA)][License]
 [![NuGet](https://img.shields.io/nuget/v/Xyaneon.Bioinformatics.FASTA.svg?style=flat)][NuGet package]
+[![main](https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/actions/workflows/main.yml/badge.svg)](https://github.com/Xyaneon/Xyaneon.Bioinformatics.FASTA/actions/workflows/main.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Xyaneon/Xyaneon.Bioinformatics.FASTA/badge.svg?branch=main)](https://coveralls.io/github/Xyaneon/Xyaneon.Bioinformatics.FASTA?branch=main)
 
 ![Package Icon][icon]
